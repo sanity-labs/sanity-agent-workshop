@@ -71,7 +71,7 @@ env, no Knowledge Base endpoint, no `groqFilter`, no Function body.
 ## Workspaces
 
 ```
-studio/          Sanity Studio v6 (6.9 line — see docs/DECISIONS.md) — schema, seed, structure, scripts
+studio/          Sanity Studio v6 — schema, seed, desk structure, bootstrap + verify scripts
 app/             Next.js 16 shell — menu page (works), chat UI (works), agent route (STUB)
 functions/       Sanity Functions — draft-menu-copy (STUB)
 packages/        @starter/eslint-config · @starter/tsconfig · @starter/sanity-types (generated)
@@ -81,7 +81,6 @@ missions/        Ten mission briefs with paste-ready prompts, the track overview
 checkpoints/     What a correct result looks like, one per mission. No code
 kb/              How to reach the shared Knowledge Base
 workflows/       The Workflows engine, for Track 2's last mission
-docs/            Decision record and the agent-kit layout
 ```
 
 Ports: Studio **3333**, app **3000**, Functions emulator **8080**.

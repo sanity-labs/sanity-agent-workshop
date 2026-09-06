@@ -3,7 +3,7 @@
 Workshop starter for **Green & Gather**, a fictional restaurant chain. A Sanity Studio v6, an
 83-document seed, and a Next.js shell with a **deliberately stubbed** agent route. Attendees
 build the agent (Track 1) or an automated content pipeline (Track 2) on top of this. Full
-picture in `README.md`; design decisions in `docs/DECISIONS.md`.
+picture in `README.md`.
 
 ## Quick start
 
@@ -15,14 +15,16 @@ files. `dev` runs studio (:3333), app (:3000), and the Functions emulator (:8080
 
 ## Workspaces
 
-| Workspace            | What it is                                                                              |
-| -------------------- | --------------------------------------------------------------------------------------- |
-| `studio/`            | Studio v6 — 10 schema types on a shared required-field contract, seed, structure        |
-| `app/`               | Next.js 16 — menu page, chat UI, and the STUBBED `app/api/agent/route.ts`               |
-| `functions/`         | `draft-menu-copy`, a STUBBED `documentEventHandler` (logs and returns)                  |
-| `packages/@starter/` | Shared eslint-config, tsconfig, generated sanity-types                                  |
-| `skills/`            | Authored agent skills. Empty until the agent-kit pass — see `docs/AGENT-KIT.md`         |
-| `.claude/skills/`    | Committed copy of `skills/` for Claude Code discovery. Keep in sync: `pnpm skills:sync` |
+| Workspace            | What it is                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `studio/`            | Studio v6 — 10 schema types on a shared required-field contract, seed, structure                              |
+| `app/`               | Next.js 16 — menu page, chat UI, and the STUBBED `app/api/agent/route.ts`                                     |
+| `functions/`         | `draft-menu-copy`, a STUBBED `documentEventHandler` (logs and returns)                                        |
+| `packages/@starter/` | Shared eslint-config, tsconfig, generated sanity-types                                                        |
+| `skills/`            | The agent kit's skills: four `sanity-workshop-*` skills plus the three public Sanity Context skills, vendored |
+| `.claude/skills/`    | Committed copy of `skills/` for Claude Code discovery. Keep in sync: `pnpm skills:sync`                       |
+| `missions/`          | Ten mission briefs with paste-ready prompts, a track overview (`README.md`), and `make-it-yours.md`           |
+| `checkpoints/`       | What a correct result looks like, one per mission. No code. Don't read unless asked                           |
 
 ## Rules of engagement — read these before touching anything
 
@@ -99,7 +101,8 @@ running ahead to it.
   version; bump them together or not at all.
 - **`sanity` is pinned to the 6.9 line on purpose.** Studio 6.10+ uses `@sanity/ui@4`, which
   removed exports the 0.31.0 workflow packages import; `sanity build` fails. Do not bump `sanity`
-  or `@sanity/ui` independently of the workflow packages. See `docs/DECISIONS.md`.
+  or `@sanity/ui` independently of the workflow packages; test with `pnpm --filter studio build`,
+  not just install.
 - `sanity.blueprint.ts` filters `draft-menu-copy` on `!defined(description.base)` as the
   recursion guard for when Mission 2-2 starts writing that field.
 
