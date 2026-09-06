@@ -68,11 +68,22 @@ Notes:
 
 ## Mission 2-3 — Transform the three market variants
 
-Transform rewrites existing content per target, with a per-target instruction. Run it after
-Generate has written `description.base`, and read the base copy in as a param so all three
-variants start from the same text.
+Transform rewrites existing content per target, with a per-target instruction. **It is
+path-for-path:** each target path is transformed in place, so it cannot read `description.base`
+into `description.nyc`. Run against empty market fields it returns success and writes nothing.
+So the chain has a patch between Generate and Transform: copy the base copy into the three market
+fields first, then Transform rewrites each in place.
 
 ```ts
+// Generate wrote the DRAFT. Read it by id — `*[_id == "drafts.…"]` returns nothing under the
+// client's default published perspective; getDocument ignores perspective.
+const draft = await client.getDocument(`drafts.${event.data._id}`)
+const base = draft?.description?.base
+await client
+  .patch(`drafts.${event.data._id}`)
+  .set({'description.nyc': base, 'description.austin': base, 'description.chicago': base})
+  .commit()
+
 await client.agent.action.transform({
   schemaId,
   documentId: event.data._id,

@@ -1,9 +1,9 @@
 ---
 name: sanity-workshop-knowledge-bases
-description: Add the shared Green & Gather Knowledge Base as a second Sanity Context source and teach the workshop agent which source to use, inside the sanity-agent-workshop repo. Use ONLY for Track 1 Missions 1-3 and 1-4 of that workshop: a second MCP in Knowledge Base mode (SANITY_CONTEXT_KB_URL, SANITY_CONTEXT_KB_TOKEN), merging two tool sets without initial_context collisions, knowledge_base_read and the outline, the peanut / shared-fryer / gluten-free questions, re-describing generic tools with domain framing, and the routing table that sends "anything with no sesame?" to GROQ and "is it safe for my sesame allergy?" to the KB. Load it when someone in this repo mentions the knowledge base, second endpoint, kb/README.md, routing, or tool descriptions. DO NOT load to build or tune a Knowledge Base from scratch (Sanity docs), for the first GROQ endpoint, embeddings, or groqFilter (sanity-workshop-context-groq), for Track 2, or for KB questions outside this workshop repo.
+description: Add the Green & Gather Knowledge Base (built from kb/README.md, or the shared backup) as a second Sanity Context source and teach the workshop agent which source to use, inside the sanity-agent-workshop repo. Use ONLY for Track 1 Missions 1-3 and 1-4 of that workshop: a second MCP in Knowledge Base mode (SANITY_CONTEXT_KB_URL, optional SANITY_CONTEXT_KB_TOKEN), merging two tool sets without initial_context collisions, knowledge_base_read and the outline, the peanut / shared-fryer / gluten-free questions, re-describing generic tools with domain framing, and the routing table that sends "anything with no sesame?" to GROQ and "is it safe for my sesame allergy?" to the KB. Load it when someone in this repo mentions the knowledge base, second endpoint, kb/README.md, routing, or tool descriptions. DO NOT load to build or tune a Knowledge Base outside this workshop (Sanity docs), for the first GROQ endpoint, embeddings, or groqFilter (sanity-workshop-context-groq), for Track 2, or for KB questions outside this workshop repo.
 ---
 
-# The shared Knowledge Base as a second source — and you are the router
+# The Knowledge Base as a second source — and you are the router
 
 You are helping a workshop attendee extend the Green & Gather menu concierge in the
 `sanity-agent-workshop` repo. Missions 1-1 and 1-2 gave it one endpoint in GROQ mode. This skill
@@ -12,10 +12,10 @@ that creates (Mission 1-4). Read `AGENTS.md` first; the attendee observes, you t
 
 ## What this skill knows
 
-| Mission | You help with                                                                  | The attendee observes                                                                        |
-| ------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| 1-3     | A second `createMCPClient` pointed at the shared KB; both tool sets registered | A cited answer in **one lookup**, reconciling a supplier sheet that was never in the dataset |
-| 1-4     | Domain-loaded tool descriptions and a routing table in the system prompt       | Two near-identical questions stop landing on the same source, three times running            |
+| Mission | You help with                                                            | The attendee observes                                                                        |
+| ------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| 1-3     | A second `createMCPClient` pointed at the KB; both tool sets registered  | A cited answer in **one lookup**, reconciling a supplier sheet that was never in the dataset |
+| 1-4     | Domain-loaded tool descriptions and a routing table in the system prompt | Two near-identical questions stop landing on the same source, three times running            |
 
 ## Product facts
 
@@ -30,12 +30,20 @@ that creates (Mission 1-4). Read `AGENTS.md` first; the attendee observes, you t
 - **A build reads the sources ahead of time, resolves conflicts, and writes entries with
   citations.** That reconciliation happens once, at build time. `groqFilter` does not apply in KB
   mode; scope is which KBs an endpoint serves.
-- **Auth is per organization.** The KB lives in the facilitator's org, so its endpoint needs a
-  Context Viewer token for _that_ org — `SANITY_CONTEXT_KB_TOKEN`, distinct from the attendee's own
-  `SANITY_ORGANIZATION_TOKEN`. Both values are published in the workshop course. A KB-mode endpoint
-  with no readable KB is refused with JSON-RPC `-32005`.
-- **Nobody builds a KB in the room.** A build takes up to two hours. `kb/README.md` covers the
-  shared KB's six sources and how to reach it; the public docs cover everything else.
+- **The attendee builds the KB themselves**, in their own organization, from `kb/README.md`: a
+  dataset source (one GROQ query, 76 docs) plus four uploaded files in `kb/sources/`. They start
+  the build at the end of Mission 1-1 so it is done by 1-3. **You do not build it for them** — it
+  is UI work in the Context app — but you can read `kb/README.md` to tell them which step they are
+  on, and you should ask whether the status line reads "Entries up to date" before wiring anything.
+- **Auth is per organization, and usually the same one.** The attendee's KB is in their own org,
+  so the KB endpoint takes `SANITY_ORGANIZATION_TOKEN` — same as the GROQ endpoint. Only the
+  **shared backup KB** (build failed, still running, or Plan B) lives in the facilitator's org and
+  needs `SANITY_CONTEXT_KB_TOKEN`. Wire the bearer as `SANITY_CONTEXT_KB_TOKEN ??
+SANITY_ORGANIZATION_TOKEN`. A KB-mode endpoint with no readable KB is refused with JSON-RPC
+  `-32005`; a token for the wrong org is a `403` naming the KB.
+- **The debug levers are theirs now.** A missing fact → add a source; skipped or under-weighted →
+  `purpose`; wrong shape or no citation → `instructions`; sources disagree → accept a claim in
+  Issues, which writes the instruction. Never hand-edit entries; a rebuild overwrites them.
 
 ## Mission 1-3 — the second source
 
@@ -82,11 +90,13 @@ whether they agree.
 
 ## When it doesn't work
 
-| Symptom                                          | First suspect                                                                                                                             |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `403` naming a Knowledge Base                    | `SANITY_CONTEXT_KB_TOKEN` isn't a Context Viewer token for the facilitator's org, or the wrong variable is being sent to the KB endpoint. |
-| JSON-RPC `-32005`                                | The endpoint has no readable KB source — check the URL is the KB endpoint, not the GROQ one.                                              |
-| Only one `initial_context` / tools missing       | Spread collision. Strip or rename before merging.                                                                                         |
-| Peanut question still answered from `groq_query` | Routing (1-4), not the KB. The GROQ tool's description needs a boundary: "not for allergen safety or policy".                             |
-| KB answer has no citation                        | Not this repo's problem — a `purpose`/`instructions` lever on the KB, which is the facilitator's. Report it.                              |
-| "Hand-edit the entry"                            | Never. A rebuild overwrites entries; fix the source or add an instruction.                                                                |
+| Symptom                                          | First suspect                                                                                                                                              |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `403` naming a Knowledge Base                    | Wrong org's token at the KB endpoint: on their own KB, `SANITY_CONTEXT_KB_TOKEN` is set when it shouldn't be; on the shared backup, it's missing or wrong. |
+| JSON-RPC `-32005`                                | No readable KB at that endpoint: the URL is the GROQ one, or the MCP also has a dataset source (dataset wins, KB ignored).                                 |
+| Peanut answer never cites Sunfield               | The spec sheet didn't ingest. Check the KB's sources for a failed import; re-upload the `.html` twin from `kb/sources/`.                                   |
+| Build still running at 1-3                       | Use the shared backup KB (`kb/README.md`, bottom) and come back to theirs later.                                                                           |
+| Only one `initial_context` / tools missing       | Spread collision. Strip or rename before merging.                                                                                                          |
+| Peanut question still answered from `groq_query` | Routing (1-4), not the KB. The GROQ tool's description needs a boundary: "not for allergen safety or policy".                                              |
+| KB answer has no citation                        | Not a code problem — an `instructions` lever on the KB. Point them at `kb/README.md` step 6; on the shared backup, tell a helper.                          |
+| "Hand-edit the entry"                            | Never. A rebuild overwrites entries; fix the source or add an instruction.                                                                                 |

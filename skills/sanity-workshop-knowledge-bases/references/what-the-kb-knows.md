@@ -1,7 +1,8 @@
-# What the shared Knowledge Base knows
+# What the Knowledge Base knows
 
-**Green & Gather — Allergens & Food Safety**, built by the facilitator from six sources. Three
-of them have no GROQ expression at all; that is why the KB exists rather than being tidier.
+**Green & Gather — Allergens & Food Safety**, built by the attendee from `kb/README.md` (the
+shared backup is built from the same recipe): one dataset source plus four uploaded files. Three
+of the files have no GROQ expression at all; that is why the KB exists rather than being tidier.
 
 | #   | Source                                                                          | In the dataset? | Load-bearing content                                                                                                                                                                                   |
 | --- | ------------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -10,7 +11,7 @@ of them have no GROQ expression at all; that is why the KB exists rather than be
 | 3   | Sunfield Foods — tamarind-lime sauce spec sheet (March 2026)                    | ❌ upload       | _"Contains: soy, wheat. Manufactured on equipment that also processes peanuts and tree nuts. Sunfield Foods cannot certify this product as free from peanut or tree nut protein."_                     |
 | 4   | Northfield Bakehouse — flour tortilla spec sheet                                | ❌ upload       | _"Contains: wheat. Produced in a facility that also handles egg and sesame. Not suitable for gluten-free applications."_                                                                               |
 | 5   | Franchise Operations Manual §7 (March 2025)                                     | ❌ upload       | _"Gluten-free wrap substitution is available on guest request at all locations"_ — superseded by the current `substitutionPolicy`. Also the only place that says the guacamole is made in-store daily. |
-| 6   | Legacy nutrition microsite (crawl, © 2024)                                      | ❌ crawl        | Allergen matrix v1 with a **blank peanut column** for the Thai Crunch Bowl; Summer Peach Bowl still under "Now Serving"; softer assurance language.                                                    |
+| 6   | Legacy nutrition microsite (saved-site PDF, © 2024)                             | ❌ upload       | Allergen matrix v1 with a **blank peanut column** for the Thai Crunch Bowl; Summer Peach Bowl still under "Now Serving"; softer assurance language.                                                    |
 
 ## The three questions and what a correct answer looks like
 
@@ -32,16 +33,17 @@ correct answer names items with the `gluten-free-option` flag as _options_, stat
 current substitution policy does **not** promise a gluten-free wrap swap because of shared prep
 surfaces, notes the older operations manual said otherwise and is superseded, and cites the
 Northfield sheet on the tortilla. If the agent says the swap is available on request, it read the
-manual over the policy — that is a KB `instructions` issue for the facilitator, not something to
-fix in the repo.
+manual over the policy — that is a KB `instructions` issue, not code: accept the current-policy
+claim on the gluten-free issue in the KB and rebuild (on the shared backup, tell a helper).
 
 ## The side payoff
 
-The KB's ingest report (visible in the Context app, in the facilitator's org) flags that the
-seed's own FAQ is wrong and the legacy site is serving a claim the current policy would never
-make. Nobody built an agent to learn that — it is a content audit for free. Worth two minutes.
+The KB's **Issues** page flags that the attendee's own FAQ is wrong and the legacy site is serving
+a claim the current policy would never make. Four expected issues: Thai Crunch peanut status, the
+gluten-free wrap swap, assurance language, Summer Peach availability. If one is missing, the source
+carrying it didn't ingest. Nobody built an agent to learn that — it is a content audit for free.
 
-## Debug levers (for anyone who goes on to build their own)
+## Debug levers (theirs now)
 
 | Symptom                        | Lever                             |
 | ------------------------------ | --------------------------------- |

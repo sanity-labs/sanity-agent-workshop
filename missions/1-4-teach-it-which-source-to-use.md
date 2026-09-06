@@ -9,7 +9,7 @@ I'm on Mission 1-4 of the Sanity agent workshop (missions/1-4-teach-it-which-sou
 Load the sanity-workshop-knowledge-bases skill and read its references/routing.md.
 
 My agent in app/app/api/agent/route.ts has two sources: a GROQ-mode Context MCP over my menu
-dataset and a Knowledge-Base-mode MCP over the shared allergen & food-safety knowledge base.
+dataset and a Knowledge-Base-mode MCP over the allergen & food-safety knowledge base.
 There is no built-in router; the model picks tools by name and description.
 
 First, with pnpm dev running, ask these two questions three times each, fresh conversation every

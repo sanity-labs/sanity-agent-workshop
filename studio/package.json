@@ -9,7 +9,7 @@
     "deploy": "sanity deploy",
     "typegen": "sanity schema extract --force && sanity typegen generate",
     "bootstrap": "sanity exec scripts/bootstrap.ts --with-user-token",
-    "seed:reset": "sanity dataset import seed/green-and-gather.ndjson --replace",
+    "seed:reset": "sanity dataset import seed/green-and-gather.ndjson production --replace",
     "verify": "sanity exec scripts/verify.ts --with-user-token",
     "typecheck": "tsc --noEmit"
   },

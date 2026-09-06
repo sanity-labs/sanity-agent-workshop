@@ -62,3 +62,19 @@ reads as a broken connection. Then `checkpoints/1-1.md`.
 Why reading the GROQ matters: people cannot reason about retrieval they've never seen, and every
 later mission depends on you being willing to look. Four vegan bowls exist; two are under $12; one
 of those is deliberately absent from Austin. The location predicate does real work.
+
+---
+
+## Before you move on: start your Knowledge Base build
+
+**Do this now, not in Mission 1-3.** Mission 1-3 adds a Knowledge Base as a second source, and you
+build it yourself — in the Context app, from your dataset plus four files in `kb/sources/`. The
+clicking takes about five minutes; the build then runs on its own for roughly ten more, which is
+Mission 1-2's running time. Start it here and it's ready when you need it.
+
+Follow steps **1–4** of [`kb/README.md`](../kb/README.md): create the KB with the given title and
+purpose, add your dataset with the given query, upload the four files, click **Build entries**.
+Then go to Mission 1-2 while it builds. Steps 5–7 (read the issues, add instructions, create the
+KB-mode endpoint) are Mission 1-3's opening.
+
+**On Plan B?** Skip this; you'll use the shared KB described at the bottom of `kb/README.md`.

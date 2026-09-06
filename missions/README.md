@@ -41,8 +41,10 @@ the linked recipes, and a Knowledge Base built from policy docs and supplier she
 **Core (1-1 to 1-3)** teaches the ways an agent can search your content and how to pick the
 right one for the question in front of you. You point an agent at your dataset and read the GROQ
 it writes. You watch the same endpoint answer three questions with three different query shapes,
-and count the calls the hard one takes. Then you add a Knowledge Base and watch that hard
-question collapse into one cited lookup, citing a supplier sheet that was never in your dataset.
+and count the calls the hard one takes. Then you add a Knowledge Base — one you build yourself,
+from your dataset plus four files, started at the end of 1-1 so it's ready by 1-3 — and watch that
+hard question collapse into one cited lookup, citing a supplier sheet that was never in your
+dataset.
 
 **Go Further (1-4 to 1-6)** is the production-shaped work: there is no built-in router, so you
 teach the agent which source to use; you personalize it for a signed-in guest without ever

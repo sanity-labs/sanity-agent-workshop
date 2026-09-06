@@ -9,7 +9,7 @@ hasn't been tested, and without a failing case the human gate in Mission 2-4 has
 event (menuItem published, description.base undefined)
   └─ 1. compute the delta: traversed allergens − declared allergens
        ├─ delta empty  → 2. Generate base copy + callout
-       │                 3. Transform nyc / austin / chicago
+       │                 3. patch base into nyc / austin / chicago, then Transform each in place
        │                 4. notify: "drafted copy for <title>"
        └─ delta present → HALT. No copy. Notify loudly: "<title> recipe reveals <delta>
                           the menu does not declare. Held for review."  Flag the item.
@@ -45,6 +45,18 @@ Note the tension with Mission 2-2, which used the Harissa bowl as its success ca
 callout picked up sesame. In 2-3 the same gap becomes the reason to halt: a menu that declares
 nothing for a dish containing sesame is a data problem a human should fix before copy goes out.
 Choose one framing per demo; both are honest.
+
+## Step 3 — patch, then Transform
+
+Transform is path-for-path: it rewrites each target where it stands and cannot read one path into
+another. Against three empty market fields it returns success and writes nothing. Patch
+`description.base` into `description.nyc`, `.austin`, and `.chicago` on the **draft** first, then
+Transform. Code in [agent-actions.md](agent-actions.md). Two traps in the same step:
+
+- Generate wrote the draft, so read it back with `client.getDocument("drafts." + id)`. A GROQ
+  `*[_id == "drafts.…"]` returns nothing under the client's default published perspective.
+- The patch touches only the three market fields, never `description.base`, so it doesn't change
+  what the blueprint filter tests.
 
 ## Step 4 — "notify"
 
@@ -83,7 +95,20 @@ the log says why.
 ## Order of operations for the demo
 
 1. `pnpm seed:reset` so every item is back to empty copy.
-2. Publish a clean item (Citrus Fennel Salad, say) → watch Generate, then three Transforms, then
-   the success notification. Open the draft in Studio: four description fields, one callout.
-3. Publish the Harissa Chickpea Bowl → watch the halt. No copy. The warning names sesame.
+2. Run the clean item — **Herb Falafel Wrap** (`gg.menuItem.herb-falafel-wrap`): it has a recipe,
+   and declared and traversed allergens match exactly (wheat, sesame). Watch Generate, the patch,
+   Transform, then the success notification. Open the draft in Studio: four description fields,
+   one callout.
+3. Run the Harissa Chickpea Bowl → watch the halt. No copy. The warning names sesame.
 4. Then hand off to Mission 2-4: this is exactly the item a human should sign off.
+
+"Run" means `sanity functions test … --with-user-token --document-id <id>` — the deployed Function
+is still the 2-1 stub unless someone redeployed, so a Studio publish would not run this chain.
+
+**Why not Citrus Fennel Salad.** It has no linked recipe (nor do House Pickles, Sesame Green
+Beans, Cheese Quesadilla, Rosemary Sweet Potatoes, Little Gather Bowl). Its delta is empty only
+because there is nothing to traverse, so the "clean" path would be asserting an absence it never
+checked. A careful handler branches three ways on the callout: recipe with allergens → "Contains:
+…"; recipe with none → "No major allergens are present in this recipe."; no recipe → "Allergen
+information for this item has not been verified against a linked recipe." All three still end with
+the cross-contact statement verbatim.

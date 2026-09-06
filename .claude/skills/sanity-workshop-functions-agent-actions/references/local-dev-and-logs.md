@@ -24,18 +24,29 @@ your dataset. `context.local` is `true`; the stub prints the "nothing is written
 
 ## The emulator
 
-`pnpm dev` runs `sanity functions dev` on port 8080 alongside the Studio and the app. Open it for
-a payload editor and live output. Publishing a menu item in the Studio while it runs is the
-Mission 2-1 demonstration.
+`pnpm dev` runs `sanity functions dev` on port 8080 alongside the Studio and the app. It is a
+web UI for `functions test`: pick a function, type a document id, run, read the output. **It does
+not receive Studio publishes.** Do not tell the attendee to publish and look at port 8080.
 
-## Watch a deployed Function
+## What a Studio publish fires
 
-Deploying is optional in the room. If you do:
+Bootstrap deployed the blueprint, so a real publish invokes the **deployed** Function. Watch it:
 
 ```sh
-pnpm --filter @starter/functions deploy       # builds, then `sanity blueprints deploy`
-npx sanity functions logs draft-menu-copy --watch
+npx sanity functions logs draft-menu-copy --watch     # start this BEFORE publishing
 ```
+
+The deployed code is whatever was last deployed — the 2-1 stub until someone redeploys. So after
+Missions 2-2 and 2-3 change the handler, a Studio publish still runs the stub; the new handler runs
+via `functions test` (or the emulator). To make a publish run the new code:
+
+```sh
+pnpm --filter @starter/functions deploy       # builds, then `sanity blueprints deploy` (~1–2 min)
+```
+
+Optional in the room. `functions test` also evaluates the blueprint filter before invoking, so a
+document that doesn't match prints `Filter ... returned an empty result. Skipping invoke.` — a free
+filter check.
 
 ## Reading the event
 

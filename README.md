@@ -78,7 +78,7 @@ still leaves a usable repo — the summary prints a manual command for anything 
 | 11  | `pnpm typegen`                                    | Optional; the shell doesn't depend on it                       |
 
 **Deliberately absent, because they are the lessons:** no Context MCP endpoint, no MCP URL in
-env, no Knowledge Base endpoint, no `groqFilter`, no Function body.
+env, no Knowledge Base (you build it — `kb/README.md`), no `groqFilter`, no Function body.
 
 ## Workspaces
 
@@ -91,7 +91,7 @@ skills/          The agent kit's skills: four sanity-workshop-* skills + the pub
 .claude/skills/  Committed copy of skills/ that Claude Code discovers (pnpm skills:sync)
 missions/        Ten mission briefs with paste-ready prompts, the track overview, make-it-yours
 checkpoints/     What a correct result looks like, one per mission. No code
-kb/              How to reach the shared Knowledge Base
+kb/              The Knowledge Base recipe (you build it in 1-1/1-3) + the four files to upload
 workflows/       The Workflows engine, for Track 2's last mission
 ```
 
@@ -139,15 +139,16 @@ before changing a price. Three rules that make or break the missions:
 
 Per workspace, no cascading. Every `.env.example` documents its own file.
 
-| Var                                                           | Workspace        | Set by                                         |
-| ------------------------------------------------------------- | ---------------- | ---------------------------------------------- |
-| `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`           | `studio/.env`    | `sanity init --template`                       |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` | `app/.env.local` | bootstrap                                      |
-| `SANITY_READ_TOKEN`                                           | `app/.env.local` | bootstrap                                      |
-| `ANTHROPIC_API_KEY`                                           | `app/.env.local` | bootstrap (prompt)                             |
-| `SANITY_ORGANIZATION_ID`, `SANITY_ORGANIZATION_TOKEN`         | `app/.env.local` | bootstrap (prompt) — you create them in Manage |
-| `SANITY_CONTEXT_MCP_URL`                                      | `app/.env.local` | **you, Mission 1-1**                           |
-| `SANITY_CONTEXT_KB_URL`                                       | `app/.env.local` | **you, Mission 1-3**                           |
+| Var                                                           | Workspace        | Set by                                           |
+| ------------------------------------------------------------- | ---------------- | ------------------------------------------------ |
+| `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`           | `studio/.env`    | `sanity init --template`                         |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` | `app/.env.local` | bootstrap                                        |
+| `SANITY_READ_TOKEN`                                           | `app/.env.local` | bootstrap                                        |
+| `ANTHROPIC_API_KEY`                                           | `app/.env.local` | bootstrap (prompt)                               |
+| `SANITY_ORGANIZATION_ID`, `SANITY_ORGANIZATION_TOKEN`         | `app/.env.local` | bootstrap (prompt) — you create them in Manage   |
+| `SANITY_CONTEXT_MCP_URL`                                      | `app/.env.local` | **you, Mission 1-1**                             |
+| `SANITY_CONTEXT_KB_URL`                                       | `app/.env.local` | **you, Mission 1-3** (built from `kb/README.md`) |
+| `SANITY_CONTEXT_KB_TOKEN`                                     | `app/.env.local` | only if you fall back to the shared KB           |
 
 ## If something is wrong
 

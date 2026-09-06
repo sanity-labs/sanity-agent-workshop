@@ -1,18 +1,19 @@
 # Adding the Knowledge Base as a second source
 
-Mission 1-3. Two MCP clients, two tokens, one flat tool list.
+Mission 1-3. Two MCP clients, one flat tool list, and (usually) one token.
 
 ## Env
 
 ```sh
-# app/.env.local — both published in the workshop course
-SANITY_CONTEXT_KB_URL=https://api.sanity.io/v1/context/organizations/<facilitatorOrgId>/mcp/<kbEndpointName>
-SANITY_CONTEXT_KB_TOKEN=<Context Viewer token for the facilitator's organization>
+# app/.env.local — the KB-mode MCP the attendee created in their own org (kb/README.md step 7)
+SANITY_CONTEXT_KB_URL=https://api.sanity.io/v1/context/organizations/<orgId>/mcp/<kbEndpointName>
+SANITY_CONTEXT_KB_TOKEN=            # empty: same org, so SANITY_ORGANIZATION_TOKEN serves both
 ```
 
-The KB token is a separate variable from `SANITY_ORGANIZATION_TOKEN` because the KB lives in a
-different organization than the attendee's dataset. Sending the attendee's own org token to the
-KB endpoint fails with a 403 naming the Knowledge Base.
+`SANITY_CONTEXT_KB_TOKEN` is only set on the **shared backup KB**, which lives in the
+facilitator's organization and therefore needs a Context Viewer token for that org. The bearer
+for the KB client is `process.env.SANITY_CONTEXT_KB_TOKEN ?? process.env.SANITY_ORGANIZATION_TOKEN`.
+The wrong org's token at the KB endpoint fails with a `403` naming the Knowledge Base.
 
 ## The pattern
 
@@ -29,7 +30,9 @@ const [groqMcp, kbMcp] = await Promise.all([
     transport: {
       type: 'http',
       url: process.env.SANITY_CONTEXT_KB_URL!,
-      headers: {Authorization: `Bearer ${process.env.SANITY_CONTEXT_KB_TOKEN}`},
+      headers: {
+        Authorization: `Bearer ${process.env.SANITY_CONTEXT_KB_TOKEN ?? process.env.SANITY_ORGANIZATION_TOKEN}`,
+      },
     },
   }),
 ])
@@ -80,4 +83,4 @@ exhaustive list; poor fit. These belong in the routing table (Mission 1-4).
 - Knowledge Bases: https://www.sanity.io/docs/ai/sanity-context-knowledge-bases
 - Context MCP tools (KB mode): https://www.sanity.io/docs/ai/sanity-context-mcp-tools
 - Retrieval modes: https://www.sanity.io/docs/ai/sanity-context-retrieval-modes
-- The shared KB itself: `kb/README.md` in this repo
+- The KB recipe (and the shared backup): `kb/README.md` in this repo

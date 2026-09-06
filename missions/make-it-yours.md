@@ -34,14 +34,14 @@ its "aha" — it'll still work, it just won't teach the same thing.
 
 ## Which missions transfer as-is
 
-| Transfers to any content                                                             | Assumes the planted cases                                                                     |
-| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| **1-1** point an agent at your content                                               | **1-3** add a KB — needs a shared KB built from _your_ sources, which takes hours             |
-| **1-2** see every way it can search — if you have prose fields and enable embeddings | **1-4** routing — needs two sources that plausibly overlap                                    |
-| **1-6** draw the boundary — any `status`-like field works                            | **1-5** personalize — needs a "guest profile" system of your own to stand in for `loyalty.ts` |
-| **2-1** run code on change — any document type                                       | **2-3** the stop condition — needs a contradiction in _your_ data to halt on                  |
-| **2-2** add an AI step — any field the AI can draft from other fields                |                                                                                               |
-| **2-4** the human gate — any document type; change `docType` in the plugin mapping   |                                                                                               |
+| Transfers to any content                                                             | Assumes the planted cases                                                                      |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| **1-1** point an agent at your content                                               | **1-3** add a KB — needs a KB built from _your_ sources; `kb/README.md` is the recipe to adapt |
+| **1-2** see every way it can search — if you have prose fields and enable embeddings | **1-4** routing — needs two sources that plausibly overlap                                     |
+| **1-6** draw the boundary — any `status`-like field works                            | **1-5** personalize — needs a "guest profile" system of your own to stand in for `loyalty.ts`  |
+| **2-1** run code on change — any document type                                       | **2-3** the stop condition — needs a contradiction in _your_ data to halt on                   |
+| **2-2** add an AI step — any field the AI can draft from other fields                |                                                                                                |
+| **2-4** the human gate — any document type; change `docType` in the plugin mapping   |                                                                                                |
 
 ## `pnpm verify` will fail against your own data — and that's correct
 

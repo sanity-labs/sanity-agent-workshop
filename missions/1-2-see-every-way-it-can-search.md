@@ -1,5 +1,7 @@
 # Mission 1-2 · See every way it can search
 
+_Your Knowledge Base from the end of 1-1 is building while you do this._
+
 **Goal** — Watch one endpoint answer three questions three different ways, and count what the
 hard one costs.
 

@@ -33,10 +33,14 @@ Mission 2-4 (the Workflows engine, a human gate) is `sanity-workshop-workflows-e
 
 ## Product facts
 
-- **Local first.** `sanity functions dev` (part of `pnpm dev`, port 8080) is a playground; `npx
-sanity functions test draft-menu-copy --dataset production --with-user-token --document-id
-<id>` runs the handler against a real document from the repo root and prints the log. No deploy
-  wait. Deploying is `pnpm --filter @starter/functions deploy` and is optional in the room.
+- **Local first.** `npx sanity functions test draft-menu-copy --dataset production
+--with-user-token --document-id <id>` runs the handler against a real document from the repo root
+  and prints the log. No deploy wait. `sanity functions dev` (part of `pnpm dev`, port 8080) is
+  the same thing with a payload editor — it does **not** receive Studio publishes.
+- **A Studio publish fires the deployed Function.** Bootstrap deployed the stub. Watch it with
+  `npx sanity functions logs draft-menu-copy --watch`. Until someone runs
+  `pnpm --filter @starter/functions deploy`, a publish runs the stub and `functions test` runs the
+  working copy — say so before an attendee publishes and wonders why nothing was drafted.
 - **The handler receives `{context, event}`.** `event.data` is shaped by the blueprint's
   projection — here `{_id, _type, title, recipe}`. Anything else, query for inside the handler
   with `createClient({...context.clientOptions, apiVersion})`. Locally `clientOptions` has only
@@ -63,9 +67,9 @@ sanity functions test draft-menu-copy --dataset production --with-user-token --d
 
 Confirm the plumbing before adding anything: build, run `sanity functions test` against
 `gg.menuItem.harissa-chickpea-bowl`, show the log line. Then have the attendee publish a menu
-item in the Studio (edit and publish; or create a new one) with `pnpm dev` running and point at
-the emulator output. Done when they can see what the Function did. Commands in
-[local-dev-and-logs.md](references/local-dev-and-logs.md).
+item in the Studio (edit and publish; or create a new one) with `functions logs --watch` running
+in a spare terminal, and point at the line that lands there. Done when they can see what the
+Function did. Commands in [local-dev-and-logs.md](references/local-dev-and-logs.md).
 
 ## Mission 2-2 — the AI step, with the right context
 
