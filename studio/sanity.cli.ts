@@ -20,7 +20,14 @@ export default defineCliConfig({
   },
   typegen: {
     enabled: true,
-    path: ['./schemaTypes/**/*.{ts,tsx}', '../app/**/*.{ts,tsx}', '../functions/*/index.ts'],
+    path: [
+      './schemaTypes/**/*.{ts,tsx}',
+      // Explicit app folders, not '../app/**' — that would scan app/node_modules.
+      '../app/app/**/*.{ts,tsx}',
+      '../app/components/**/*.{ts,tsx}',
+      '../app/lib/**/*.{ts,tsx}',
+      '../functions/*/index.ts',
+    ],
     generates: '../packages/@starter/sanity-types/sanity.types.ts',
   },
 })

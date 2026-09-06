@@ -70,7 +70,7 @@ env, no Knowledge Base endpoint, no `groqFilter`, no Function body.
 ## Workspaces
 
 ```
-studio/          Sanity Studio v6 — schema, seed, desk structure, bootstrap + verify scripts
+studio/          Sanity Studio v6 (6.9 line — see docs/DECISIONS.md) — schema, seed, structure, scripts
 app/             Next.js 16 shell — menu page (works), chat UI (works), agent route (STUB)
 functions/       Sanity Functions — draft-menu-copy (STUB)
 packages/        @starter/eslint-config · @starter/tsconfig · @starter/sanity-types (generated)

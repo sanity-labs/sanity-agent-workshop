@@ -1,15 +1,13 @@
-import {
-  BasketIcon,
-  CaseIcon,
-  ClipboardIcon,
-  ComponentIcon,
-  HelpCircleIcon,
-  ListIcon,
-  PackageIcon,
-  PinIcon,
-  TransferIcon,
-  WarningOutlineIcon,
-} from '@sanity/icons'
+import {BasketIcon} from '@sanity/icons/Basket'
+import {CaseIcon} from '@sanity/icons/Case'
+import {ClipboardIcon} from '@sanity/icons/Clipboard'
+import {ComponentIcon} from '@sanity/icons/Component'
+import {HelpCircleIcon} from '@sanity/icons/HelpCircle'
+import {ListIcon} from '@sanity/icons/List'
+import {PackageIcon} from '@sanity/icons/Package'
+import {PinIcon} from '@sanity/icons/Pin'
+import {TransferIcon} from '@sanity/icons/Transfer'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import type {StructureResolver} from 'sanity/structure'
 
 const MENU_CATEGORIES = [

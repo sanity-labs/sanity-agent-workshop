@@ -1,7 +1,8 @@
 # Workflows — the engine behind Track 2's last mission
 
 > **Unofficial and pre-1.0.** This page is written from the `@sanity/workflow-studio-plugin`
-> README and verified behaviour at version **0.31.0**. Every `@sanity/workflow-*` package is
+> README and verified behaviour at version **0.31.0** — the deploy below was run successfully on a
+> freshly created project with nothing but a `sanity login` session on 2026-09-06. Every `@sanity/workflow-*` package is
 > pre-1.0; APIs may change. Not for production use. If you have access to the `sanity-io/workflows`
 > repository, its `docs/` are the fuller source.
 

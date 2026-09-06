@@ -13,15 +13,20 @@ onlyBuiltDependencies:
 # Studio v6 is required by both products this workshop teaches:
 #   - @sanity/workflow-studio-plugin 0.31.0 peers on sanity ^6.3.0
 #   - Sanity Context v2 endpoints need a deployed v6 schema
-# Verified co-installing cleanly on 2026-09-06.
+#
+# ⚠ Pinned to the 6.9 line, NOT latest. Studio 6.10 moved to @sanity/ui@4, which
+# removed the root `Tooltip` export that @sanity/workflow-components and
+# @sanity/workflow-diagram 0.31.0 still import — `sanity build` fails with
+# MISSING_EXPORT on 6.10+. Bump sanity past 6.9 only together with a
+# @sanity/workflow-* release that targets @sanity/ui ^4. Verified 2026-09-06.
 catalog:
-  sanity: '^6.12.0'
-  '@sanity/vision': '^6.12.0'
+  sanity: '~6.9.0'
+  '@sanity/vision': '~6.9.0'
   '@sanity/client': '^8.4.0'
   '@sanity/icons': '^5.2.1'
-  # Studio v6 depends on @sanity/ui ^4. The workflow packages peer on ^3.3 and
-  # work on 4.x; without this pin pnpm floats @sanity/ui to a 5.0 alpha.
-  '@sanity/ui': '^4.0.7'
+  # Studio 6.9 and the workflow packages both want @sanity/ui 3.x. Without an
+  # explicit pin pnpm floats it to a 5.0 alpha.
+  '@sanity/ui': '^3.5.4'
   # The workflow plugin peers on @sanity/sdk ^2.12 — do NOT bump to 3.x.
   '@sanity/sdk': '^2.20.2'
   # All eight @sanity/workflow-* packages publish as a fixed runtime stack:

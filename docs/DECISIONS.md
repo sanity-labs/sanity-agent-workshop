@@ -45,18 +45,29 @@ git history. Nobody shares a checkout; someone who mangles their data runs `pnpm
 
 ## Dependencies
 
-### Studio v6 with `@sanity/ui` pinned to 4.x — 2026-09-06
+### Studio pinned to the 6.9 line, not latest — 2026-09-06
 
 Both products the workshop teaches need v6: `@sanity/workflow-studio-plugin@0.31.0` peers on
-`sanity ^6.3.0`, and Context v2 endpoints need a deployed v6 schema. Verified co-installing on
-`sanity@6.12.0` with all eight `@sanity/workflow-*@0.31.0` and `@sanity/sdk@2.20.2`.
+`sanity ^6.3.0`, and Context v2 endpoints need a deployed v6 schema. The spec proposed
+`sanity@6.12.0` (`latest`) and the eight packages _install_ alongside it without error.
 
-Without an explicit pin pnpm floated `@sanity/ui` to a 5.0 alpha, because the workflow packages
-peer on `^3.3` and Studio depends on `^4`. Pinned `^4.0.7` in the catalog. The remaining peer
-warnings (workflow packages wanting ui 3.x; `@sanity/workbench` alpha wanting sdk 3.x) are
-unsatisfiable simultaneously and harmless.
+**They do not build.** Studio 6.10 moved from `@sanity/ui@3` to `@sanity/ui@4`, which removed the
+root `Tooltip` and `TooltipDelayGroupProvider` exports. `@sanity/workflow-components` and
+`@sanity/workflow-diagram` at 0.31.0 still import them from the root, so `sanity build` on 6.10+
+fails with `MISSING_EXPORT`. An install-only spike would not have caught this; the build did.
 
-**Do not bump `@sanity/sdk` to 3.x** while the workflow plugin peers on `^2.12`.
+| `sanity`      | depends on `@sanity/ui` | workflow 0.31.0 builds? |
+| ------------- | ----------------------- | ----------------------- |
+| 6.3.0 – 6.9.x | `^3.2` – `^3.5.1`       | ✅                      |
+| 6.10.0+       | `^4.0.3`                | ❌                      |
+
+So the catalog pins `sanity: '~6.9.0'`, `@sanity/vision: '~6.9.0'`, `@sanity/ui: '^3.5.4'`.
+This also removes the `@sanity/sdk` tension (6.12 pulls `@sanity/sdk-react@3`, the plugin peers
+on `@sanity/sdk ^2.12`). Without the explicit `@sanity/ui` pin pnpm floats it to a 5.0 alpha.
+
+**Bump `sanity` past 6.9 only together with a `@sanity/workflow-*` release that targets
+`@sanity/ui ^4`.** Worth flagging to the Workflows team: the plugin's `sanity ^6.3.0` peer range
+is wider than what actually builds.
 
 ### `@sanity/context` dropped — 2026-09-06
 
@@ -138,11 +149,37 @@ gets, and prints the Manage path and exact permission name (_Context Viewer_) wh
 missing, because a missing org token reads as a broken connection rather than a missing
 credential.
 
+## Verified on a throwaway project — 2026-09-06
+
+Project `df1g2lrd` in the "bree test" org, created with `sanity projects create`, bootstrap run
+twice.
+
+| Measurement                            | First run (fresh) | Second run (idempotent) |
+| -------------------------------------- | ----------------- | ----------------------- |
+| Whole bootstrap                        | 137s              | 66s                     |
+| Dataset Embeddings (`--wait`, 83 docs) | 28s               | 12s (already enabled)   |
+| Blueprint deploy                       | 85s               | 36s                     |
+| Schema deploy                          | 7s                | 8s                      |
+| Seed import                            | 2s                | 1s                      |
+
+- **Embeddings are seconds, not minutes.** No need to move them into the pre-flight.
+- **The blueprint deploy is the long pole** at more than half of a fresh run. If the 10-minute
+  window is tight in rehearsal, this is the step to split into `bootstrap:track2`.
+- **The Workflows deploy is not gated.** `sanity-workflows deploy --tag production` on the fresh
+  project created `menu-item-review v1` with only the `sanity login` session. Mission 2-4 needs
+  no enablement ask. (The spike's definition files were removed afterward; writing them is the
+  mission.)
+- `pnpm verify` passes online against the bootstrapped dataset, including `Embeddings ready`.
+- The stub route streams the "not connected yet" reply; the menu page renders the 18 published
+  items (the deprecated Summer Peach and internal Winter Miso bowls correctly absent).
+- The stubbed Function runs locally via `sanity functions test` and logs the item and its recipe.
+
 ## Open
 
-- **Embeddings generation time on a fresh 83-doc project.** Bootstrap uses `--wait`; time it in
-  the dry run. If it is minutes rather than seconds, move it earlier or into the pre-flight.
-- **Workflows deploy on a fresh account.** The CLI README says "early access, restricted". A
-  20-minute spike on a throwaway project settles whether Mission 2-4 needs an enablement ask.
-- **Whether to split bootstrap** into a Track 1 fast path and `bootstrap:track2` for the
-  blueprint deploy. Decide after the first timed dry run.
+- **Whether to split bootstrap** into a Track 1 fast path and `bootstrap:track2` for the blueprint
+  deploy. The measurements above say it would roughly halve a fresh run. Decide after a timed dry
+  run on conference-speed wifi.
+- **The real `pnpm create sanity@latest --template` command** has not been exercised — the repo
+  is not yet pushed. It pulls the repo, runs `sanity init`, writes `.env` files, and initialises
+  git; a local clone exercises none of that. Test it from a directory that isn't the working copy,
+  as a second Sanity account with Context _not_ enabled.

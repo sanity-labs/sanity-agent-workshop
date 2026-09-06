@@ -79,6 +79,9 @@ learner. That is the failure mode this repo is designed against.
   named `menu-item-review` that does not exist until Mission 2-4 deploys it. The empty Workflows
   tab until then is intended. The eight `@sanity/workflow-*` packages are pinned exact at one
   version; bump them together or not at all.
+- **`sanity` is pinned to the 6.9 line on purpose.** Studio 6.10+ uses `@sanity/ui@4`, which
+  removed exports the 0.31.0 workflow packages import; `sanity build` fails. Do not bump `sanity`
+  or `@sanity/ui` independently of the workflow packages. See `docs/DECISIONS.md`.
 - `sanity.blueprint.ts` filters `draft-menu-copy` on `!defined(description.base)` as the
   recursion guard for when Mission 2-2 starts writing that field.
 
