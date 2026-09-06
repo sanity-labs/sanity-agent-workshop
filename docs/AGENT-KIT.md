@@ -1,9 +1,10 @@
-# Where the agent kit goes
+# The agent kit — layout and contract
 
-The missions, prompts, skills, and checkpoints are being written in a separate pass, tied to the
-missions themselves. This page is the contract for that pass: where each piece lives, what shape
-it takes, and what is already wired up waiting for it. Nothing here needs to be invented; it needs
-to be filled in.
+**Status: landed 2026-09-06.** Four `sanity-workshop-*` skills, the three public Sanity Context
+skills vendored alongside them, ten missions plus `make-it-yours.md`, and ten checkpoints. This
+page remains the contract for maintaining them: where each piece lives, what shape it takes, and
+the rules that keep the lessons intact. `DECISIONS.md` records what changed from the original plan
+(four skills instead of three; the `sanity-workshop-` prefix; vendoring the public skills).
 
 ## The four parts, one job each
 
@@ -23,28 +24,34 @@ product works._ Product churn between now and GA touches skills, not ten mission
 
 ```
 skills/
-  sanity-context-groq/            Missions 1-1, 1-2, 1-5, 1-6
-    SKILL.md
-    references/
-      retrieval-modalities.md
-      groq-filter-and-scope.md
-      instructions-field.md
-  sanity-knowledge-bases/         Missions 1-3, 1-4 (routing lives here — it only exists once a second source does)
-    SKILL.md
-    references/
-  sanity-functions-workflows/     Missions 2-1 … 2-4
-    SKILL.md
-    references/
+  sanity-workshop-context-groq/             Missions 1-1, 1-2, 1-5, 1-6
+    SKILL.md · evals/trigger-evals.json
+    references/ wiring-the-route · retrieval-modalities · instructions-field · personalization · groq-filter-and-scope
+  sanity-workshop-knowledge-bases/          Missions 1-3, 1-4 (routing lives here — it only exists once a second source does)
+    references/ second-source · what-the-kb-knows · routing
+  sanity-workshop-functions-agent-actions/  Missions 2-1, 2-2, 2-3
+    references/ local-dev-and-logs · agent-actions · chaining-and-stop-conditions
+  sanity-workshop-workflows-engine/         Mission 2-4
+    references/ define-and-deploy · enforcement
+  create-agent-with-sanity-context/         public, vendored verbatim (skills-lock.json pins the hash)
+  dial-your-context/                        public, vendored verbatim
+  shape-your-agent/                         public, vendored verbatim
 ```
 
+Four workshop skills, not three: Functions + Agent Actions and the Workflows engine are different
+packages with different churn rates, and a skill description that covers both triggers on the
+generic word "workflow". The `sanity-workshop-` prefix exists because the public skills sit in the
+same bundle and the two sets must be distinguishable at a glance.
+
 A per-mission skill would fire ten times for one concept. `SKILL.md` stays short; `references/`
-carries the detail and is pulled in on demand.
+carries the detail and is pulled in on demand. Each workshop skill's `evals/trigger-evals.json`
+holds 20 should/shouldn't-trigger queries for the skill-creator description optimizer.
 
 ### Skill shape
 
 ```markdown
 ---
-name: sanity-context-groq
+name: sanity-workshop-context-groq
 description: <trigger-accurate — the agent picks a skill from this line alone>
 ---
 
@@ -57,8 +64,11 @@ description: <trigger-accurate — the agent picks a skill from this line alone>
 - [retrieval-modalities.md](references/retrieval-modalities.md) — …
 ```
 
-**Descriptions must be trigger-accurate.** A vague description means the wrong skill loads
-mid-mission.
+**Descriptions must be trigger-accurate and scoped.** These skills are narrower than "anyone
+using Sanity", so each description names the surface (this workshop repo, these missions), says
+"use ONLY for…" and "DO NOT load for…", and names the general nouns it could be confused with
+(general Sanity Context work, GitHub Actions "workflows", the other track). Without that, the
+workshop skill loads for someone's production chatbot, or the public skill loads for a mission.
 
 ### Authored vs. discovered — already wired
 
@@ -82,11 +92,12 @@ skills should be **thin wrappers that add the Green & Gather specifics and the m
 constraints, and link to the official ones for product mechanics.** Read those three first and
 write against the gap, not a parallel set that drifts.
 
-Decide at authoring time whether to vendor the official three into `skills/` (pin a hash in a
-`skills-lock.json` at root) or to have `AGENTS.md` tell the agent to run
-`npx skills add sanity-io/context --all`. Vendoring is safer for the room. Note the vendored
-copies currently in circulation still document Context **v1** (Studio plugin, project-addressed
-URL); check the upstream has caught up to v2 before pinning.
+**Decided: vendored**, verbatim, with `skills-lock.json` at the root pinning the upstream hashes.
+Safer for the room than a network install. The vendored copies (and upstream as of 2026-09-03)
+still document Context **v1** — the Studio plugin and a project-addressed URL — so
+`sanity-workshop-context-groq` states the v2 facts and says the public skill is behind where they
+disagree. Re-vendor (`npx skills add sanity-io/context --all`, then `pnpm skills:sync`) when
+upstream catches up, and drop that caveat.
 
 ### What the skills must not contain
 

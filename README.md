@@ -12,9 +12,10 @@ _is_ a lesson is a visible, labeled stub:
 | The guest signals | `app/lib/loyalty.ts` — two hard-coded guests, one peanut allergy | Track 1  |
 | The Function body | `functions/draft-menu-copy/index.ts` — logs and returns          | Track 2  |
 
-You take this repo away and keep building on it. The missions, prompts, and skills that drive the
-build come from the **workshop agent kit** (the Learn course), and land in this repo in a later
-pass — see [`docs/AGENT-KIT.md`](docs/AGENT-KIT.md) for where they go.
+You take this repo away and keep building on it. The **agent kit** that drives the build is in the
+repo: ten missions with paste-ready prompts in [`missions/`](missions/README.md), what a correct
+result looks like in [`checkpoints/`](checkpoints/README.md), and the skills your coding agent
+loads in [`skills/`](skills/). Start at [`missions/README.md`](missions/README.md).
 
 ## Setup
 
@@ -74,8 +75,10 @@ studio/          Sanity Studio v6 (6.9 line — see docs/DECISIONS.md) — schem
 app/             Next.js 16 shell — menu page (works), chat UI (works), agent route (STUB)
 functions/       Sanity Functions — draft-menu-copy (STUB)
 packages/        @starter/eslint-config · @starter/tsconfig · @starter/sanity-types (generated)
-skills/          Agent skills — authored source. Empty until the agent-kit pass
+skills/          The agent kit's skills: four sanity-workshop-* skills + the public Sanity Context skills
 .claude/skills/  Committed copy of skills/ that Claude Code discovers (pnpm skills:sync)
+missions/        Ten mission briefs with paste-ready prompts, the track overview, make-it-yours
+checkpoints/     What a correct result looks like, one per mission. No code
 kb/              How to reach the shared Knowledge Base
 workflows/       The Workflows engine, for Track 2's last mission
 docs/            Decision record and the agent-kit layout

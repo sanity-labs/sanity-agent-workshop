@@ -31,8 +31,9 @@ learner. That is the failure mode this repo is designed against.
 
 1. **One mission at a time. Never implement a mission the developer hasn't opened.** If asked
    to "finish the track", stop and ask which mission they are on.
-2. **Never read `checkpoints/` unless asked.** (It does not exist yet; when it does, it holds
-   expected outcomes, not solutions.)
+2. **Never read `checkpoints/` unless asked.** It holds expected outcomes, not solutions, and it
+   is for the developer to self-verify — reading it ahead of time is how you end up steering toward
+   an answer instead of building one.
 3. **When asked "why is this wrong?", diagnose, don't fix.** Point at the tool call, the GROQ,
    the field, or the log line. Let them make the change.
 4. **Never add a `spicy`, `heat`, `heaviness`, or derived `vegan` / `isVegan` field.** Heat and
@@ -54,6 +55,23 @@ learner. That is the failure mode this repo is designed against.
    If a mission's expected answer looks wrong, that's a finding to report, not a file to patch.
 10. **After any schema or seed change, run `pnpm verify`** (or `pnpm verify:offline` without a
     project). **After editing anything in `skills/`, run `pnpm skills:sync`.**
+
+## Missions and skills
+
+The developer works from `missions/<track>-<n>-<slug>.md`, pasting its **Prompt** block to you.
+Each prompt names the skill to load. Use these four for the workshop's own material and the
+vendored public skills for product depth:
+
+| Skill                                                                       | Missions           | Covers                                                                                                                                                      |
+| --------------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sanity-workshop-context-groq`                                              | 1-1, 1-2, 1-5, 1-6 | Wiring the route, retrieval modalities, personalization, `groqFilter`                                                                                       |
+| `sanity-workshop-knowledge-bases`                                           | 1-3, 1-4           | The shared KB as a second source; routing                                                                                                                   |
+| `sanity-workshop-functions-agent-actions`                                   | 2-1, 2-2, 2-3      | The Function, Generate, Transform, the stop condition                                                                                                       |
+| `sanity-workshop-workflows-engine`                                          | 2-4                | `defineWorkflow`, deploy, the human gate                                                                                                                    |
+| `create-agent-with-sanity-context`, `dial-your-context`, `shape-your-agent` | any                | Public Sanity Context skills. Note: they still document Context **v1** (Studio plugin, project-addressed URL); the workshop skills carry the v2 corrections |
+
+`missions/README.md` says where each track is headed, so you know the destination without
+running ahead to it.
 
 ## Architecture constraints
 

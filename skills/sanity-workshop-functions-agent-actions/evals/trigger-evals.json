@@ -1,0 +1,82 @@
+[
+  {
+    "query": "I'm on Mission 2-1 of the Sanity agent workshop. Build functions/draft-menu-copy, run it locally with sanity functions test against gg.menuItem.harissa-chickpea-bowl, and show me the log line.",
+    "should_trigger": true
+  },
+  {
+    "query": "Mission 2-2: add an Agent Action Generate step to the draft-menu-copy function that drafts description.base and allergenCallout from the recipe's ingredient allergenTags, ending with the cross-contact statement verbatim",
+    "should_trigger": true
+  },
+  {
+    "query": "the function in the workshop repo ran but nothing changed on the menu item in the studio?? the log says generate succeeded",
+    "should_trigger": true
+  },
+  {
+    "query": "for mission 2-3 chain generate → transform per market (nyc/austin/chicago) and add a stop condition so the harissa chickpea bowl doesn't get copy because its recipe has sesame the menu doesn't declare",
+    "should_trigger": true
+  },
+  {
+    "query": "why does sanity.blueprint.ts in the green & gather starter filter on !defined(description.base)? can I remove it",
+    "should_trigger": true
+  },
+  {
+    "query": "my transform step returned three basically identical descriptions for nyc, austin and chicago. how do I make the market variants actually differ?",
+    "should_trigger": true
+  },
+  {
+    "query": "where do i get the schemaId for client.agent.action.generate in the workshop functions? sanity functions test says schema not found",
+    "should_trigger": true
+  },
+  {
+    "query": "the draft-menu-copy function keeps firing over and over after I added a status patch. how do I stop the loop",
+    "should_trigger": true
+  },
+  {
+    "query": "should the allergenCallout in the workshop have nyc/austin/chicago variants like description does?",
+    "should_trigger": true
+  },
+  {
+    "query": "Mission 2-4: write studio/workflows/menu-item-review.ts with defineWorkflow and deploy it with sanity-workflows deploy --tag production",
+    "should_trigger": false
+  },
+  {
+    "query": "the Workflows tab is empty on my menu items after deploying the definition",
+    "should_trigger": false
+  },
+  {
+    "query": "Mission 1-2: ask my agent three questions and show me the GROQ each one generated. Do not change any code.",
+    "should_trigger": false
+  },
+  {
+    "query": "add the shared knowledge base as a second source to the agent route and ask if the fryer is shared",
+    "should_trigger": false
+  },
+  {
+    "query": "I need a Sanity Function on our marketing site that posts to Slack whenever a blog post is published. Not workshop related. How do I set up the blueprint?",
+    "should_trigger": false
+  },
+  {
+    "query": "write an Agent Actions translate call that creates a Norwegian version of our product documents in our ecommerce studio",
+    "should_trigger": false
+  },
+  {
+    "query": "how do I set up a scheduled Sanity function that runs every hour to classify conversations for Agent Insights?",
+    "should_trigger": false
+  },
+  {
+    "query": "our Next.js API route needs to call Claude to summarize support tickets. write it with the Anthropic SDK",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a GitHub Actions workflow that runs pnpm lint and typecheck on every PR for this repo",
+    "should_trigger": false
+  },
+  {
+    "query": "explain how document event handlers differ from webhooks in Sanity and when I'd pick each for a CDN purge",
+    "should_trigger": false
+  },
+  {
+    "query": "generate seed data for 20 more menu items in the green & gather ndjson so the menu looks fuller",
+    "should_trigger": false
+  }
+]

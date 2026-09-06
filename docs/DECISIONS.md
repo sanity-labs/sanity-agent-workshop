@@ -6,7 +6,31 @@ outside the repo; this file carries only what someone maintaining the repo needs
 
 ## Scope
 
-### The starter ships as a shell. Skills, missions, and checkpoints come in a later pass. — 2026-09-06
+### The agent kit landed: four `sanity-workshop-*` skills, the public skills vendored, ten missions, ten checkpoints — 2026-09-06
+
+Changes from the original plan, each on purpose:
+
+- **Four skills, not three.** Functions + Agent Actions (Missions 2-1 to 2-3) and the Workflows
+  engine (2-4) are different packages with different churn; a combined description triggers on
+  the generic word "workflow". Split: `sanity-workshop-functions-agent-actions` and
+  `sanity-workshop-workflows-engine`.
+- **The `sanity-workshop-` prefix.** The public Sanity Context skills ship in the same `skills/`
+  bundle, so the workshop-specific ones must be distinguishable at a glance. Every workshop skill's
+  description also scopes itself with "use ONLY for…" / "DO NOT load for…" language, per the
+  internal skill-writing guide, so it doesn't fire on someone's production chatbot.
+- **The public skills are vendored verbatim**, pinned in `skills-lock.json`, rather than installed
+  at bootstrap. They still document Context v1; the workshop skills carry the v2 corrections and say
+  so. The vendored `create-agent-with-sanity-context` includes a full reference route
+  (v1-shaped); Mission 1-1's prompt tells the agent to write the route from the pattern rather
+  than copy it, and `AGENTS.md` backs that up.
+- **Checkpoints are written as predictions.** They were authored from the design and a first dry
+  run, not from walking every mission with a room. `checkpoints/README.md` says so. Walk 1-1 → 1-3
+  and 2-1 → 2-2 on the real app and correct them from what you see.
+- **`SANITY_CONTEXT_KB_TOKEN`** was added to `app/.env.example`: the shared KB lives in the
+  facilitator's organization, so its endpoint needs a token for that org, distinct from the
+  attendee's own `SANITY_ORGANIZATION_TOKEN`.
+
+### The starter ships as a shell. Skills, missions, and checkpoints come in a later pass. — 2026-09-06 (superseded the same day by the entry above)
 
 The first pass contains the Studio, the seed, the app shell, the Functions stub, bootstrap,
 verify, and the docs. It does **not** contain `skills/` content, `missions/`, or `checkpoints/`.
