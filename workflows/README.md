@@ -1,148 +1,117 @@
 # Workflows — the engine behind Track 2's last mission
 
-> **Unofficial and pre-1.0.** This page is written from the `@sanity/workflow-studio-plugin`
-> README and verified behaviour at version **0.31.0** — the deploy below was run successfully on a
-> freshly created project with nothing but a `sanity login` session on 2026-09-06. Every `@sanity/workflow-*` package is
-> pre-1.0; APIs may change. Not for production use. If you have access to the `sanity-io/workflows`
-> repository, its `docs/` are the fuller source.
+> **Early access, built in public.** Everything here is from the official docs at
+> <https://www.sanity.io/docs/workflows/introduction> (checked 2026-09-06) and from a real deploy
+> on a fresh project with `@sanity/workflow-*@0.31.0`. Read
+> [How early access works](https://www.sanity.io/docs/workflows/prerelease) before relying on it:
+> the packages are `0.x`, a minor bump can break, and the stored-document contract is stricter
+> than the package API.
 
 Mission 2-4 puts a human in front of the pipeline: a new menu item is held at _review_ and cannot
-reach _approved_ until someone clicks Approve in the Studio. This is a real build with the
-Workflows engine, and the plugin is already registered in `studio/sanity.config.ts` — you deploy
-a **definition**, you don't wire the plugin.
+reach _approved_ until someone fires Approve in the Studio. The plugin is already registered in
+`studio/sanity.config.ts` — you deploy a **definition**, you don't wire the plugin.
 
-## Four ideas
+## The vocabulary
 
-- A **definition** describes a workflow's stages and the actions that move work between them.
-  Authored in code, deployed as a document into your dataset. Versioned and immutable.
-- An **instance** is one run of a definition, attached to one of your documents.
-- The **plugin** (`@sanity/workflow-studio-plugin`) is the Studio UI over both: a workflow strip
-  above the form, a Workflows tab beside the editor, and a Workflows tool in the navbar with a
-  run table and a per-run **history feed**.
-- A small **runtime** you host (two Sanity Functions) handles what editors can't — timed waits
-  and unattended side-effects. **Optional for this mission.** Everything a human clicking Approve
-  needs works without it.
+Sanity Workflows turns a content process into data. You describe the process once as a
+**definition**: the stages content moves through, the work in each stage, and the rules for moving
+on. Every run is an **instance**, a Sanity document tracking that one run, pinned to the definition
+version it started on. People, agents, and applications all follow the same definition and write to
+the same record.
 
-Vocabulary in dependency order: definition → instance → **stages** (an instance is in exactly
-one) → **activities** (units of work a stage waits on) → **actions** (moves a person or the
-engine can make) → **fields** (what actions write — workflow fields, not schema fields) →
-**transitions** (fire on a condition over fields) → guards → effects.
+Inside one run: a **stage** is a named place, and an instance sits in exactly one (a stage with no
+way out is terminal). A stage holds **activities**, the work to be done there. An **action**
+resolves an activity — a person approves, an agent finishes a job — and writes its result into the
+instance's **fields**. A **transition** watches those fields through a **condition** and moves the
+instance on as soon as the condition holds; nothing chooses to move it. **Effects** are queued work
+that reaches outside the engine. **Guards** are restrictions deployed as their own document beside
+the content, for the length of a stage visit.
+
+**The engine is a library, not a service.** Nothing runs in the background and nothing moves on a
+timer by itself. It acts only when code calls it — the Studio plugin when an editor fires an
+action, the CLI, or a Sanity Function you run. A human clicking Approve needs nothing more than the
+Studio. Deadlines and unattended effects are what a Document Function (to drain effects) and a
+Scheduled Function (to tick) are for — production, not this mission.
 
 ## The three steps
 
-**1. Define it** — `studio/workflows/menu-item-review.ts`. Note the `/define` subpath.
+Full code, in the official helper form, in
+[`skills/sanity-workshop-workflows-engine/references/define-and-deploy.md`](../skills/sanity-workshop-workflows-engine/references/define-and-deploy.md).
 
-```ts
-import {defineWorkflow} from '@sanity/workflow-engine/define'
+**1. Define it** — `studio/workflows/menu-item-review.ts`, with `defineWorkflow`, `defineStage`,
+`defineActivity`, `defineAction`, `defineTransition`, and `defineField` from
+`@sanity/workflow-engine/define`. Stages `drafting → review → approved`; a required `subject`
+field with `initialValue: {type: 'input'}`; and a **publish-hold guard** on `review` so the Studio
+disables Publish while the item is under review.
 
-export const menuItemReview = defineWorkflow({
-  name: 'menu-item-review', // must match the mapping in sanity.config.ts
-  title: 'Menu item review',
-  description: 'Draft the copy, get food safety to sign off, publish.',
-  initialStage: 'drafting',
-  fields: [{type: 'subject', name: 'subject', title: 'Menu item', initialValue: {type: 'input'}}],
-  stages: [
-    {
-      name: 'drafting',
-      title: 'Drafting',
-      activities: [
-        {
-          name: 'write',
-          title: 'Draft the description and allergen callout',
-          actions: [{name: 'submit', title: 'Submit for food-safety review', status: 'done'}],
-        },
-      ],
-      transitions: [{name: 'to-review', title: 'Send to review', to: 'review'}],
-    },
-    {
-      name: 'review',
-      title: 'Food-safety review',
-      activities: [
-        {
-          name: 'review',
-          title: 'Check the allergen callout against the recipe',
-          actions: [{name: 'approve', title: 'Approve', status: 'done'}],
-        },
-      ],
-      transitions: [{name: 'to-approved', title: 'Approve', to: 'approved'}],
-    },
-    {name: 'approved', title: 'Approved', activities: []}, // no transitions out = terminal
-  ],
-})
-```
-
-**2. Deploy it** — `studio/sanity.workflow.ts`, then one command. Auth is your `sanity login`
-session (or `SANITY_AUTH_TOKEN`). State is documents in your own dataset. Deploys are idempotent.
-
-```ts
-import {defineWorkflowConfig} from '@sanity/workflow-engine/define'
-import {menuItemReview} from './workflows/menu-item-review'
-
-export default defineWorkflowConfig({
-  deployments: [
-    {
-      expectedMinReaderModel: 4,
-      name: 'production',
-      tag: 'production', // must match workflowStudioPlugin({tag}) in sanity.config.ts
-      workflowResource: {type: 'dataset', id: '<projectId>.<dataset>'},
-      definitions: [menuItemReview],
-    },
-  ],
-})
-```
+**2. Deploy it** — `studio/sanity.workflow.ts` with `defineWorkflowConfig`: `name` and `tag`
+`'production'`, `expectedMinReaderModel: 4`, `workflowResource: {type: 'dataset', id:
+'<projectId>.<dataset>'}`. Then, from `studio/`:
 
 ```sh
-cd studio && npx sanity-workflows deploy --tag production   # --dry-run to preview
+pnpm exec sanity-workflows deploy --check                      # offline validation
+pnpm exec sanity-workflows deploy --dry-run --tag production   # diff against what's deployed
+pnpm exec sanity-workflows deploy --tag production
 ```
 
-**3. Open a menu item.** The plugin is already configured with `autoStart: true` for `menuItem`,
-so a _fresh_ document is born under review. Click **Submit for food-safety review**, then
-**Approve**, and read the history feed.
+Auth is your `sanity login` session or `SANITY_AUTH_TOKEN`. Re-running an unchanged definition
+writes nothing.
+
+**3. Create a new menu item.** The mapping in `sanity.config.ts` has `autoStart: true`, so a fresh
+document is born under review. Fire _Submit for food-safety review_ in the Workflows view, notice
+Publish is disabled, fire _Approve_, and read the run's history in the Workflows tool.
 
 ## Two things to get right
 
-- **The `tag` must match** between `sanity-workflows deploy --tag` and `workflowStudioPlugin({tag})`.
-  A mismatch shows no definitions and the Workflows tab looks broken.
-- **`structureTool` needs both `structure` and `defaultDocumentNode: workflowDefaultDocumentNode()`.**
-  Already done in `sanity.config.ts` — don't replace one with the other.
+- **The `tag` must match** between the deploy and `workflowStudioPlugin({tag})`. A definition
+  deployed under another tag is invisible to the Studio — the first thing to check when the
+  Workflows view is empty.
+- **`structureTool` needs both `structure` and `defaultDocumentNode:
+workflowDefaultDocumentNode()`.** Already done in `sanity.config.ts`.
 
 ## The idea worth the whole mission
 
-**A transition watches a field, not a button.** Clicking Approve writes an approval into the
-instance's fields; the transition watches the field. An agent or a script can fire the same
-action and write the same field, and the transition moves the instance the same way — all a
-transition ever sees is the fields, never who or what set them. Humans and agents on the same
-primitives, because the mechanism cannot tell them apart.
+An action writes its result into the instance's fields; a transition watches the fields and fires
+when its condition holds. Nothing in a transition knows _who_ wrote the field. The same gate holds
+work the Function drafted in Mission 2-3 and work a person typed — humans and agents on the same
+primitives. The workshop's framing: **Workflows coordinate handoffs between people and agents.
+Functions execute the machine steps. Stages are for actors; steps are for code.**
 
-**Workflows coordinate handoffs between people and agents. Functions execute the machine steps.
-Stages are for actors; steps are for code.** The engine is a headless library, not a runtime: it
-decides what happens next and queues _effects_ that your Function carries out. Track 2's core
-(Missions 2-1 to 2-3) isn't a warm-up for this — it's what this delegates to.
+## What is enforced — say it before someone tests it with curl
 
-## The enforcement story — three layers, not one
+In the docs' words: _every check the engine makes is advisory_, and _the Content Lake is the only
+enforcement point._
 
-Someone will test the gate with `curl`, so here it is first:
+| Layer                                                                    | Holds against a raw write?                                                                                                      |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Engine checks (action verdicts, permission gates, readiness)             | **No, by design.** They exist so a UI can disable the right controls and explain why.                                           |
+| A **guard** (the publish hold)                                           | **Not yet.** The engine and the Studio plugin honor it; the Content Lake does not evaluate guard documents during early access. |
+| Dataset access control — and Track 1's `groqFilter` on a private dataset | **Yes, today.**                                                                                                                 |
 
-| Layer                                                     | Enforces?                                                                                                                                                                          |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Engine checks (action filters, verdicts)                  | **No, by design and permanently.** They exist so the UI can disable the right button and explain why                                                                               |
-| `guards` (compile to a lock document in the Content Lake) | **The designed enforcement point.** The contract document deploys today; **lake-side denial has not shipped**: a raw client writing directly to the Content Lake is not yet denied |
-| Track 1's `groqFilter` on a private dataset               | **Yes, today**                                                                                                                                                                     |
+The demonstration: with an item held at review, Publish is disabled in the Studio. Publish the same
+document with a write token from a terminal and it lands — and the instance doesn't move, because
+it only watches its own fields. A coordination layer with enforcement designed and pending, which
+is exactly the contrast with Mission 1-6.
 
-Publish a menu item straight from its document, skipping the workflow, and the instance still
-advances — the transition reads the document's published status, not whether the action fired.
-The workflow follows what is true, not how it was made true. That is observing reality, not
-enforcing it.
+## Early access, plainly
 
-## v0 limits
-
-One instance per document · code-defined, no visual builder · the Studio plugin is explicitly
-temporary · 0.31.0, pre-1.0, breaking changes expected · not for production · no native
-Slack/Linear connectors (the engine queues an effect, you write the handler) · guard enforcement
-pending.
+`0.x` where a minor bump can break · one exact version across every `@sanity/workflow-*` package ·
+the stored-document contract only grows, never migrates · you run the runtime · the lake does not
+enforce guards yet · `sanity blueprints deploy` cannot deploy Workflows resources yet, use
+`sanity-workflows deploy` · `sanity-workflows nuke --deployment <name>` resets a deployment's
+definitions, instances, and guards without touching content.
 
 ## Naming
 
-**Workflows** is the editorial product, composed of _stages_, where people and agents act. Track
-2's Missions 2-1 to 2-3 chain _Functions_ — the machine side. Don't call that a workflow, and
-don't introduce a third product name.
+**Workflows** is the product, composed of stages where people and agents act. Track 2's Missions
+2-1 to 2-3 chain _Functions_ — the machine side. Don't call that a workflow.
+
+## Docs
+
+[Introduction](https://www.sanity.io/docs/workflows/introduction) ·
+[Quick start](https://www.sanity.io/docs/workflows/getting-started) ·
+[Studio plugin](https://www.sanity.io/docs/workflows/studio-plugin) ·
+[Configure and deploy](https://www.sanity.io/docs/workflows/deploy-definitions) ·
+[Guards and enforcement](https://www.sanity.io/docs/workflows/guards) ·
+[How early access works](https://www.sanity.io/docs/workflows/prerelease) ·
+[Reference](https://www.sanity.io/docs/workflows/reference)

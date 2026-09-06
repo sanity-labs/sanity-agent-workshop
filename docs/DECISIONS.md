@@ -30,6 +30,27 @@ Changes from the original plan, each on purpose:
   facilitator's organization, so its endpoint needs a token for that org, distinct from the
   attendee's own `SANITY_ORGANIZATION_TOKEN`.
 
+### Workflows material rewritten against the official docs, with one correction — 2026-09-06
+
+The Workflows skill, `workflows/README.md`, mission 2-4, and checkpoint 2-4 were first written from
+the plugin README plus planning notes that quoted the private `sanity-io/workflows` docs. Official
+docs exist at <https://www.sanity.io/docs/workflows/introduction>, so all four were rewritten from
+the Introduction, Quick start, Studio plugin, Configure and deploy, Guards, and How early access
+works pages. Every private-doc quote was replaced with the official wording or a link.
+
+**The correction:** the original "publish it directly and the instance still advances"
+demonstration was wrong for our definition. Its transitions default to `$allActivitiesDone`, so a
+direct publish doesn't move the instance at all. The honest demonstration, from the Guards page: a
+**publish-hold guard** on `review` makes the Studio disable Publish while the item is under review;
+a raw write with a token still lands because the Content Lake doesn't evaluate guard documents yet;
+and the instance doesn't move because it only watches its own fields. The guard is now part of the
+mission's definition. Verified: the official helper form with the guard typechecks and deployed as
+`menu-item-review v2` on the test project with `@sanity/workflow-*@0.31.0`.
+
+Also dropped as unofficial: "one instance per document", "the Studio plugin is temporary", and the
+Pipelines naming note. Kept as the workshop's own framing (not a doc quote): "stages are for
+actors; steps are for code."
+
 ### The starter ships as a shell. Skills, missions, and checkpoints come in a later pass. — 2026-09-06 (superseded the same day by the entry above)
 
 The first pass contains the Studio, the seed, the app shell, the Functions stub, bootstrap,

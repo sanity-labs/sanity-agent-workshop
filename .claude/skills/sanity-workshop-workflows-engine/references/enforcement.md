@@ -1,65 +1,64 @@
-# The enforcement story — three layers, not one
+# What is enforced — and what isn't yet
 
-The engine's own documentation opens with _"the engine enforces nothing… the Content Lake is
-the only enforcement point."_ Say this before someone in the room tests the gate with curl,
-because someone will.
+From the official docs (Introduction → _Engine checks are advisory_; _How early access works_ →
+_What is not enforced yet_; _Guards and enforcement_), 2026-09-06. Say this before someone in the
+room tests the gate with curl, because someone will.
 
-## The layers
+## The docs' own words
 
-| Layer                                                                                                                                                           | What it is                                                                                        | Enforces?                                                                                                                                                                                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Engine checks** — action filters, verdicts, permission gates, readiness pre-flights                                                                           | Advisory by design, permanently. They exist so a UI can disable the right button and explain why. | **No**                                                                                                                                                                                             |
-| **`guards`** — a stage-level lock that compiles to its own document in the Content Lake, deployed when the instance enters the stage and deleted when it leaves | The designed enforcement point. The contract document deploys today.                              | **Not yet** — _"a raw client writing directly to the Content Lake is not yet denied by the lake itself."_ Treat a guard as a pre-flight on the engine's own writes and as pending everywhere else. |
-| **Track 1's `groqFilter` on a private dataset**                                                                                                                 | A server-side read boundary                                                                       | **Yes, today**                                                                                                                                                                                     |
+> Every check the engine makes is advisory. Action verdicts, permission gates, readiness
+> pre-flights, and editability checks exist so a UI can disable the right controls and explain
+> why. Anyone with a write token can talk to the Content Lake directly and skip the engine, so the
+> Content Lake is the only enforcement point.
 
-Three mechanisms, three different guarantees, one afternoon. It is the sharpest governance
-contrast available: Mission 1-6 is enforced now; Mission 2-4 is a coordination layer with
-enforcement designed and pending.
+> During early access the Content Lake does not enforce deployed guard documents yet. So a guard
+> currently previews an allow or deny verdict for engine-aware surfaces, and explains a denied
+> engine commit. Until the lake enforces guards, a rule you cannot afford to have bypassed belongs
+> in dataset access control.
 
-## A guard, for reference
+## The three layers
 
-```ts
-defineStage({
-  name: 'review',
-  guards: [
-    {
-      name: 'lock-subject',
-      match: {idRefs: [{type: 'fieldRead', field: 'subject'}], actions: ['publish']},
-    },
-  ],
-})
-```
+| Layer                                                                        | What it is                                                                                                                                                                                                                                  | Holds against a raw write?                                                           |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Engine checks**                                                            | Action verdicts, permission gates, readiness, editability                                                                                                                                                                                   | **No, by design.** UX, not a security boundary.                                      |
+| **A guard**                                                                  | A restriction deployed as its own document beside the content, for one stage visit. The Studio plugin disables the denied action (publish, unpublish, delete) and names the workflow; the engine refuses its own write if a guard denies it | **Not yet.** The Content Lake does not evaluate guard documents during early access. |
+| **Dataset access control** — and Track 1's `groqFilter` on a private dataset | Enforced by the Content Lake                                                                                                                                                                                                                | **Yes, today.**                                                                      |
 
-Not part of the mission; here so the attendee can see the shape of the thing that will enforce.
+Three mechanisms, three different guarantees, one afternoon. Mission 1-6 is enforced now;
+Mission 2-4 is a coordination layer with enforcement designed and pending.
 
-## The demonstration that makes it land
+## The demonstration
 
-Publish the menu item straight from its document, skipping the workflow. The instance **still
-advances** — because the transition reads the document's published status, not whether the
-Approve action fired. _"The workflow follows what is true, not how it was made true. That is the
-workflow observing reality, not enforcing it."_
+With a menu item held at `review` and the `hold-publish` guard deployed:
 
-Same primitive from the other side: a transition keys off **fields, not a button press**.
-Clicking Approve writes an approval into the instance's fields. An agent or a script can write
-the same field, and the instance moves identically. The mechanism cannot tell humans and agents
-apart — which is the workshop's theme stated by the product itself.
+1. In the Studio, **Publish is disabled** and the tooltip names the workflow. Unpublish and delete
+   behave the same way if the guard lists them.
+2. From a terminal, publish the same document with a write token — for example
+   `cd studio && npx sanity documents create <json>` with the published id, or any client with a
+   token that can mutate. **It lands.** The lake does not consult the guard document.
+3. Look at the instance: **it hasn't moved.** Its transitions watch its own fields
+   (`$allActivitiesDone`), and nothing wrote to them. The workflow didn't block the write and
+   didn't observe it either.
 
-## `autoStart` has the same honest limit
+That is the honest shape of early access: the engine and the plugin honor the guard, the lake
+does not, and a rule that must hold against every writer belongs in dataset access control today.
 
-`autoStart` materialises the document and starts the workflow when an editor opens a fresh
-document in the Studio. A raw client or any non-Studio write bypasses it entirely. _"A floor,
-not a guarantee."_
+## Two related honest limits
 
-## v0 limits to state plainly
-
-One instance per document · code-defined, no visual builder · the Studio plugin is explicitly
-temporary · 0.31.0, pre-1.0, breaking changes expected · not for production use · no native
-Slack/Linear connectors (the engine queues an effect; you write the handler) · guard enforcement
-pending.
+- **`autoStart` is fresh-only and Studio-only.** "Writes outside Studio bypass auto-start. It is an
+  integration convenience, not an enforcement boundary."
+- **The engine does not yet separate the caller's identity from its own writes** — both ride the
+  caller's token — so dataset access control evaluated against an editor's token can block the
+  engine's housekeeping. Not a workshop concern, but the reason the guard is on `publish` only.
 
 ## Why this use case
 
-Nobody publishes an allergen claim without sign-off. Mission 2-3's halted Harissa Chickpea Bowl
-— a recipe that reveals sesame the menu never declared — is exactly the item a food-safety
-reviewer should see before copy goes out. That is not a contrived approval flow, which is why
-this use case was chosen.
+Nobody publishes an allergen claim without sign-off. Mission 2-3's halted Harissa Chickpea Bowl —
+a recipe that reveals sesame the menu never declared — is exactly the item a food-safety reviewer
+should see before copy goes out. That is not a contrived approval flow.
+
+## References
+
+- Guards and enforcement: https://www.sanity.io/docs/workflows/guards
+- Actors, tokens, and what's actually enforced: https://www.sanity.io/docs/workflows/actors-and-enforcement
+- How early access works: https://www.sanity.io/docs/workflows/prerelease

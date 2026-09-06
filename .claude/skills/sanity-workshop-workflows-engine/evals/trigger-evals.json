@@ -1,6 +1,6 @@
 [
   {
-    "query": "I'm on Mission 2-4 of the Sanity agent workshop. Write studio/workflows/menu-item-review.ts with defineWorkflow (drafting → review → approved) and studio/sanity.workflow.ts, dry-run the deploy, then deploy with sanity-workflows deploy --tag production.",
+    "query": "I'm on Mission 2-4 of the Sanity agent workshop. Write studio/workflows/menu-item-review.ts with defineWorkflow (drafting \u2192 review \u2192 approved) and studio/sanity.workflow.ts, dry-run the deploy, then deploy with sanity-workflows deploy --tag production.",
     "should_trigger": true
   },
   {
@@ -20,7 +20,7 @@
     "should_trigger": true
   },
   {
-    "query": "explain the three layer enforcement thing for the workflows engine — engine checks vs guards vs groqFilter — before I demo mission 2-4",
+    "query": "explain the three layer enforcement thing for the workflows engine \u2014 engine checks vs guards vs groqFilter \u2014 before I demo mission 2-4",
     "should_trigger": true
   },
   {
@@ -48,7 +48,7 @@
     "should_trigger": false
   },
   {
-    "query": "I want an editorial approval workflow for our news site's articles using Sanity — two reviewers, legal sign-off. What are my options? This is for production, not a workshop.",
+    "query": "I want an editorial approval workflow for our news site's articles using Sanity \u2014 two reviewers, legal sign-off. What are my options? This is for production, not a workshop.",
     "should_trigger": false
   },
   {
@@ -60,7 +60,7 @@
     "should_trigger": false
   },
   {
-    "query": "write a definePipeline with @sanity/blueprints that runs three steps after publish",
+    "query": "write a Sanity Functions pipeline with @sanity/blueprints that runs three steps after publish",
     "should_trigger": false
   },
   {
