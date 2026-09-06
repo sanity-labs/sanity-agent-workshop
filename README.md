@@ -21,8 +21,19 @@ loads in [`skills/`](skills/). Start at [`missions/README.md`](missions/README.m
 
 ```sh
 pnpm create sanity@latest --template sanity-labs/sanity-agent-workshop
-cd sanity-agent-workshop
-pnpm install && pnpm bootstrap && pnpm dev
+```
+
+The CLI asks for a **project name** and creates a new Sanity project and dataset for you. It puts
+the repo in a folder named after that project name (it prints the path when it finishes), writes
+the env files, adds the CORS origin, installs dependencies, and makes a first git commit.
+
+**Then ignore the CLI's suggestion to run `pnpm dev`.** Change into the folder it printed and run
+bootstrap first:
+
+```sh
+cd <the folder the CLI printed>
+pnpm bootstrap
+pnpm dev
 ```
 
 Then open <http://localhost:3000/chat> and send a message.
@@ -141,7 +152,11 @@ Per workspace, no cascading. Every `.env.example` documents its own file.
 
 - **The agent can't see any content** → check your org token before your code. A missing or
   project-scoped token reads as a broken connection, not a missing credential.
-- **The menu page is empty** → `pnpm bootstrap` again; it is safe to re-run.
+- **The menu page is empty** → you probably ran `pnpm dev` before `pnpm bootstrap`, as the CLI
+  suggests. Stop the dev server, `pnpm bootstrap`, then `pnpm dev`. Bootstrap is safe to re-run.
+- **The template command fails with "Duplicate origin already exists"** → you pointed it at a
+  project that already has a `localhost:3000` CORS origin, usually from an earlier attempt. Let it
+  create a new project instead, or delete that origin under Manage → API → CORS origins and re-run.
 - **Semantic ranking looks random** → `cd studio && npx sanity datasets embeddings status
 production`. A status of `updating` returns incomplete rankings with no error.
 - **Counts are wrong after Track 2** → `pnpm seed:reset`.
