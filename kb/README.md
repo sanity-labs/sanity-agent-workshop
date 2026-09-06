@@ -89,9 +89,6 @@ document Sanity never held, and each carries a fact the dataset doesn't:
 | 3   | `green-and-gather-franchise-ops-manual-section-7.pdf` | Franchise Operations Manual §7, dated **March 2025**   | _"Gluten-free wrap substitution is available on guest request"_ — contradicted by the current `substitutionPolicy`. Also: guacamole is made in store daily  |
 | 4   | `greenandgather-nutrition-legacy-site.pdf`            | The legacy nutrition microsite, saved as a PDF, © 2024 | Allergen matrix v1 with a **blank peanut column** for Thai Crunch; Summer Peach Bowl still "Now Serving"; softer assurance language                         |
 
-Every file has an `.html` twin in the same folder with identical content. If a PDF or the DOCX
-fails to ingest, upload the `.html` instead.
-
 ### 4. Build
 
 **Build entries.** Then move on to Mission 1-2 — the build runs on its own. Done when the status

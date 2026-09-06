@@ -94,7 +94,7 @@ whether they agree.
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `403` naming a Knowledge Base                    | Wrong org's token at the KB endpoint: on their own KB, `SANITY_CONTEXT_KB_TOKEN` is set when it shouldn't be; on the shared backup, it's missing or wrong. |
 | JSON-RPC `-32005`                                | No readable KB at that endpoint: the URL is the GROQ one, or the MCP also has a dataset source (dataset wins, KB ignored).                                 |
-| Peanut answer never cites Sunfield               | The spec sheet didn't ingest. Check the KB's sources for a failed import; re-upload the `.html` twin from `kb/sources/`.                                   |
+| Peanut answer never cites Sunfield               | The spec sheet didn't ingest. Check the KB's sources for a failed import; re-upload it from `kb/sources/`.                                                 |
 | Build still running at 1-3                       | Use the shared backup KB (`kb/README.md`, bottom) and come back to theirs later.                                                                           |
 | Only one `initial_context` / tools missing       | Spread collision. Strip or rename before merging.                                                                                                          |
 | Peanut question still answered from `groq_query` | Routing (1-4), not the KB. The GROQ tool's description needs a boundary: "not for allergen safety or policy".                                              |
