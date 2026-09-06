@@ -10,7 +10,7 @@
     "bootstrap": "pnpm --filter studio bootstrap",
     "seed:reset": "pnpm --filter studio seed:reset",
     "verify": "pnpm --filter studio verify",
-    "skills:sync": "rm -rf .claude/skills && cp -R skills .claude/skills",
+    "skills:sync": "oxfmt skills && rm -rf .claude/skills && cp -R skills .claude/skills",
     "skills:check": "diff -r skills .claude/skills",
     "typegen": "pnpm --filter studio typegen",
     "pretypecheck": "pnpm run typegen",
