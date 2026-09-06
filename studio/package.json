@@ -1,0 +1,40 @@
+{
+  "name": "studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typegen": "sanity schema extract && sanity typegen generate",
+    "bootstrap": "sanity exec scripts/bootstrap.ts --with-user-token",
+    "seed:reset": "sanity dataset import seed/green-and-gather.ndjson --replace",
+    "verify": "sanity exec scripts/verify.ts --with-user-token",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sanity/icons": "catalog:",
+    "@sanity/sdk": "catalog:",
+    "@sanity/ui": "catalog:",
+    "@sanity/vision": "catalog:",
+    "@sanity/workflow-cli": "catalog:",
+    "@sanity/workflow-components": "catalog:",
+    "@sanity/workflow-diagram": "catalog:",
+    "@sanity/workflow-engine": "catalog:",
+    "@sanity/workflow-react": "catalog:",
+    "@sanity/workflow-sdk": "catalog:",
+    "@sanity/workflow-studio": "catalog:",
+    "@sanity/workflow-studio-plugin": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
+  },
+  "devDependencies": {
+    "@starter/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

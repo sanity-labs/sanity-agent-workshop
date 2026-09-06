@@ -1,0 +1,50 @@
+packages:
+  - studio
+  - app
+  - functions
+  - packages/@starter/*
+
+# esbuild (via rolldown/vite) needs its postinstall to fetch the platform binary.
+onlyBuiltDependencies:
+  - esbuild
+
+# Shared dependency versions. Workspaces reference these with `catalog:`.
+#
+# Studio v6 is required by both products this workshop teaches:
+#   - @sanity/workflow-studio-plugin 0.31.0 peers on sanity ^6.3.0
+#   - Sanity Context v2 endpoints need a deployed v6 schema
+# Verified co-installing cleanly on 2026-09-06.
+catalog:
+  sanity: '^6.12.0'
+  '@sanity/vision': '^6.12.0'
+  '@sanity/client': '^8.4.0'
+  '@sanity/icons': '^5.2.1'
+  # Studio v6 depends on @sanity/ui ^4. The workflow packages peer on ^3.3 and
+  # work on 4.x; without this pin pnpm floats @sanity/ui to a 5.0 alpha.
+  '@sanity/ui': '^4.0.7'
+  # The workflow plugin peers on @sanity/sdk ^2.12 — do NOT bump to 3.x.
+  '@sanity/sdk': '^2.20.2'
+  # All eight @sanity/workflow-* packages publish as a fixed runtime stack:
+  # one matching version across all of them, pinned exact because they're pre-1.0.
+  '@sanity/workflow-engine': '0.31.0'
+  '@sanity/workflow-studio-plugin': '0.31.0'
+  '@sanity/workflow-components': '0.31.0'
+  '@sanity/workflow-diagram': '0.31.0'
+  '@sanity/workflow-react': '0.31.0'
+  '@sanity/workflow-sdk': '0.31.0'
+  '@sanity/workflow-studio': '0.31.0'
+  '@sanity/workflow-cli': '0.31.0'
+  # Vercel AI SDK — the 6.x line, matching the official Sanity Context reference
+  # implementation (sanity-io/context, `create-agent-with-sanity-context` skill).
+  ai: '^6.0.177'
+  '@ai-sdk/anthropic': '^3.0.76'
+  '@ai-sdk/mcp': '^1.0.41'
+  '@ai-sdk/react': '^3.0.179'
+  zod: '^4.3.6'
+  groq: '^6.12.0'
+  react: '^19.2.8'
+  react-dom: '^19.2.8'
+  '@types/react': '^19.2'
+  '@types/react-dom': '^19.2.3'
+  styled-components: '^6.4.2'
+  typescript: '^5.9.3'

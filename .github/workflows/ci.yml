@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Validate (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+      - run: pnpm install
+      - name: Format check
+        run: pnpm run format:check
+      - name: Lint
+        run: pnpm run lint
+      - name: Typecheck
+        run: pnpm run typecheck
+        env:
+          SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID || 'placeholder' }}
+          SANITY_STUDIO_DATASET: ${{ vars.SANITY_DATASET || 'production' }}
+      - name: Validate template
+        run: pnpm run validate
+      - name: Skills in sync
+        # skills/ is the authored source; .claude/skills/ is the committed copy
+        # Claude Code discovers. They must match — run `pnpm skills:sync`.
+        run: pnpm run skills:check
+      - name: Seed guardrails (offline checks)
+        run: pnpm run verify:offline
+        env:
+          SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID || 'placeholder' }}
+          SANITY_STUDIO_DATASET: ${{ vars.SANITY_DATASET || 'production' }}
+      - name: Check function bundle sizes
+        run: |
+          pnpm --filter @starter/functions build
+          max_kb=512
+          failed=0
+          for dir in functions/dist/*/; do
+            bundle="$dir/index.js"
+            [ -f "$bundle" ] || continue
+            size_kb=$(( $(wc -c < "$bundle") / 1024 ))
+            name=$(basename "$dir")
+            if [ "$size_kb" -gt "$max_kb" ]; then
+              echo "::error::$name bundle is ${size_kb} KB (max ${max_kb} KB)"
+              failed=1
+            else
+              echo "$name: ${size_kb} KB ✓"
+            fi
+          done
+          exit $failed

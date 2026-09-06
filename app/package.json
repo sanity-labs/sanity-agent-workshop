@@ -1,0 +1,32 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "catalog:",
+    "@ai-sdk/mcp": "catalog:",
+    "@ai-sdk/react": "catalog:",
+    "@sanity/client": "catalog:",
+    "ai": "catalog:",
+    "groq": "catalog:",
+    "next": "^16.3.4",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-markdown": "^10.1.0",
+    "server-only": "^0.0.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@starter/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
