@@ -6,6 +6,11 @@ around.
 **Before the prompt (you, in the Dashboard):** open your MCP in the Context app and set its
 **groqFilter** to `status == "published"`. Save.
 
+> **On Plan B** (the legacy endpoint): append the filter to the URL in `app/.env.local` instead —
+> `SANITY_CONTEXT_MCP_URL=<fallback url>?groqFilter=status%20%3D%3D%20%22published%22`. It is still
+> applied server-side by the endpoint, so the lesson holds; it just lives in your env rather than
+> in the app.
+
 **Prompt** — copy this:
 
 ```

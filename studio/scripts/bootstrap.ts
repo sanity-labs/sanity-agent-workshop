@@ -11,7 +11,7 @@
  *   2b. Prompt for organization ID + organization token (skippable, loud)
  *   3. Add CORS origin http://localhost:3000
  *   4. Deploy schema (required for a Context MCP in GROQ mode)
- *   4b. Deploy Studio — optional, prompted, soft-fail
+ *   4b. Deploy Studio — prompted (default yes), soft-fail. Needed by the Plan B endpoint.
  *   5. Import the 83-document seed
  *   6. Make the dataset private
  *   7. Create a project read token (Viewer) → app/.env.local
@@ -154,7 +154,14 @@ try {
   ensureAppEnvLocal()
   patchEnvVar(appEnvLocal, 'NEXT_PUBLIC_SANITY_PROJECT_ID', projectId)
   patchEnvVar(appEnvLocal, 'NEXT_PUBLIC_SANITY_DATASET', dataset)
-  console.log('Wrote project ID + dataset to app/.env.local')
+  // Plan B for Mission 1-1: the legacy project-addressed Context endpoint. Needs a
+  // deployed Studio and takes the project read token as bearer. See app/.env.example.
+  patchEnvVar(
+    appEnvLocal,
+    'SANITY_CONTEXT_MCP_URL_FALLBACK',
+    `https://api.sanity.io/v2026-03-03/context/mcp/${projectId}/${dataset}`,
+  )
+  console.log('Wrote project ID, dataset, and the fallback Context URL to app/.env.local')
   success('Consolidate env')
 } catch (err) {
   failed('Consolidate env', err, `Add NEXT_PUBLIC_SANITY_PROJECT_ID=${projectId} to app/.env.local`)
@@ -200,14 +207,32 @@ try {
   let orgId = vars.SANITY_ORGANIZATION_ID
   let orgToken = vars.SANITY_ORGANIZATION_TOKEN
 
+  // The organization ID is derivable: the project knows which org it belongs to.
+  // Only the org token has no API or CLI path and has to be pasted.
   if (!isRealValue(orgId)) {
-    orgId = prompt('Sanity organization ID (from sanity.io/manage — Enter to skip): ')
-    if (orgId) patchEnvVar(appEnvLocal, 'SANITY_ORGANIZATION_ID', orgId)
+    try {
+      const project = (await client.request({uri: `/projects/${projectId}`})) as {
+        organizationId?: string
+      }
+      if (project.organizationId) {
+        orgId = project.organizationId
+        patchEnvVar(appEnvLocal, 'SANITY_ORGANIZATION_ID', orgId)
+        console.log(`Organization ID ${orgId} (looked up from the project)`)
+      }
+    } catch {
+      /* fall through to the prompt */
+    }
   } else {
     console.log('Organization ID already configured')
   }
+  if (!isRealValue(orgId)) {
+    orgId = prompt('Sanity organization ID (from sanity.io/manage — Enter to skip): ')
+    if (orgId) patchEnvVar(appEnvLocal, 'SANITY_ORGANIZATION_ID', orgId)
+  }
   if (!isRealValue(orgToken)) {
-    orgToken = prompt('Organization API token with Context Viewer permissions (Enter to skip): ')
+    orgToken = prompt(
+      'Organization API token with Context Viewer permissions (from the pre-flight — Enter to skip): ',
+    )
     if (orgToken) patchEnvVar(appEnvLocal, 'SANITY_ORGANIZATION_TOKEN', orgToken)
   } else {
     console.log('Organization token already configured')
@@ -217,16 +242,16 @@ try {
     success('Organization ID + token')
   } else {
     console.log(
-      '\n  ⚠  Your agent cannot reach Sanity Context without BOTH of these. Two clicks, no CLI path:\n' +
+      '\n  ⚠  Your agent cannot reach Sanity Context without an organization token. Two clicks, no CLI path:\n' +
         '     1. https://www.sanity.io/manage → your organization → Apps → enable Context\n' +
         '     2. Same org → API → Tokens → Add API token → permission "Context Viewer"\n' +
         '        (an ORGANIZATION token — a project token is refused with 403 contextGrantRequired)\n' +
-        '     Then add SANITY_ORGANIZATION_ID and SANITY_ORGANIZATION_TOKEN to app/.env.local.\n',
+        '     Then add SANITY_ORGANIZATION_TOKEN to app/.env.local.\n',
     )
     skipped(
       'Organization ID + token',
-      'Missing org ID and/or org token. Setup still succeeds; Mission 1-1 will not until these exist.',
-      'Add SANITY_ORGANIZATION_ID and SANITY_ORGANIZATION_TOKEN to app/.env.local (see the note above)',
+      'Missing org token. Setup still succeeds; Mission 1-1 will not until it exists.',
+      'Add SANITY_ORGANIZATION_TOKEN (and SANITY_ORGANIZATION_ID if missing) to app/.env.local',
     )
   }
 } catch (err) {
@@ -284,10 +309,15 @@ try {
 // screen-share. `sanity deploy` asks you to pick a hostname the first time,
 // so it is opt-in here rather than silently blocking on a prompt.
 
-heading('Deploy Studio (optional)')
+heading('Deploy Studio')
+console.log(
+  'A hosted Studio is optional for the workshop, with one exception: the fallback Context\n' +
+    'endpoint (Plan B in app/.env.example, for when the Context app is unavailable) only\n' +
+    'works for a project with a deployed Studio. Takes about a minute; you pick a hostname.',
+)
 try {
-  const answer = prompt('Deploy a hosted Studio now? You will be asked to pick a hostname. (y/N): ')
-  if (/^y/i.test(answer)) {
+  const answer = prompt('Deploy a hosted Studio now? (Y/n): ')
+  if (!/^n/i.test(answer.trim())) {
     sanity('deploy')
     success('Deploy Studio')
   } else {
@@ -425,6 +455,10 @@ try {
 // a failure here must not stop anyone.
 
 heading('Deploy blueprint (Track 2)')
+console.log(
+  'This step takes about 90 seconds and prints "No new activity" while it waits — that is normal.\n' +
+    "Please don't interrupt it. Only Track 2 needs it; Track 1 works without it either way.",
+)
 try {
   run('pnpm', ['--filter', '@starter/functions', 'run', 'build'], {cwd: root})
   const blueprintConfig = resolve(root, '.sanity/blueprint.config.json')

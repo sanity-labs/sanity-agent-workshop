@@ -16,7 +16,11 @@ export default defineCliConfig({
   // ask you to pick one the first time you run it.
   reactStrictMode: true,
   deployment: {
-    autoUpdates: true,
+    // Off on purpose. Auto-updates would serve the latest Studio at runtime, and this
+    // repo pins sanity to the 6.9 line because the @sanity/workflow-* 0.31 packages
+    // do not build against @sanity/ui@4 (Studio 6.10+). A deployed Studio has to run
+    // the same version the plugin was built for. See AGENTS.md.
+    autoUpdates: false,
   },
   typegen: {
     enabled: true,

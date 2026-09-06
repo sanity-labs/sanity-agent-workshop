@@ -13,6 +13,15 @@ the GROQ it writes.
 4. Put it in `app/.env.local` as `SANITY_CONTEXT_MCP_URL`. Your `SANITY_ORGANIZATION_ID` and
    `SANITY_ORGANIZATION_TOKEN` are already there from the pre-flight.
 
+> **Plan B — if the Context app won't load for your organization.** The legacy project-addressed
+> endpoint serves the same GROQ tools with your _project_ read token, provided your Studio is
+> deployed (say yes at bootstrap's deploy prompt, or `cd studio && npx sanity deploy`). In
+> `app/.env.local`, set `SANITY_CONTEXT_MCP_URL` to the value bootstrap wrote in
+> `SANITY_CONTEXT_MCP_URL_FALLBACK`, and set `SANITY_CONTEXT_MCP_TOKEN` to your `SANITY_READ_TOKEN`.
+> Then use the prompt below unchanged. Everything you observe is the same; only the door you came
+> in through differs, and you'll set `instructions` and `groqFilter` as URL parameters in later
+> missions instead of in the app.
+
 **Prompt** — copy this:
 
 ```
@@ -23,7 +32,8 @@ I have created a Sanity Context MCP in the Context app with my project + dataset
 (GROQ mode) and put its URL in app/.env.local as SANITY_CONTEXT_MCP_URL. My organization ID and
 organization token are already in app/.env.local.
 
-Wire app/app/api/agent/route.ts to that endpoint with @ai-sdk/mcp and the Vercel AI SDK. Keep
+Wire app/app/api/agent/route.ts to that endpoint with @ai-sdk/mcp and the Vercel AI SDK. Use
+SANITY_CONTEXT_MCP_TOKEN as the bearer if it is set, otherwise SANITY_ORGANIZATION_TOKEN. Keep
 the response a UI message stream, which is what app/components/ChatPanel.tsx already expects —
 do not change ChatPanel.tsx. Write the route yourself from the pattern in the skill; do not copy
 a reference implementation from another project. A short system prompt is fine: the agent is

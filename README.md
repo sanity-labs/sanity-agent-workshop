@@ -27,8 +27,9 @@ The CLI asks for a **project name** and creates a new Sanity project and dataset
 the repo in a folder named after that project name (it prints the path when it finishes), writes
 the env files, adds the CORS origin, installs dependencies, and makes a first git commit.
 
-**Then ignore the CLI's suggestion to run `pnpm dev`.** Change into the folder it printed and run
-bootstrap first:
+The CLI finishes by suggesting `pnpm dev`. This starter has **one more step before that**: bootstrap
+seeds your dataset, deploys the schema, and mints the tokens the app needs. Change into the folder
+the CLI printed and run:
 
 ```sh
 cd <the folder the CLI printed>
@@ -152,8 +153,14 @@ Per workspace, no cascading. Every `.env.example` documents its own file.
 
 - **The agent can't see any content** → check your org token before your code. A missing or
   project-scoped token reads as a broken connection, not a missing credential.
-- **The menu page is empty** → you probably ran `pnpm dev` before `pnpm bootstrap`, as the CLI
-  suggests. Stop the dev server, `pnpm bootstrap`, then `pnpm dev`. Bootstrap is safe to re-run.
+- **The Context app won't load or errors for your organization** → use **Plan B**: the legacy
+  project-addressed endpoint. Bootstrap wrote its URL to `app/.env.local` as
+  `SANITY_CONTEXT_MCP_URL_FALLBACK`. Copy that value into `SANITY_CONTEXT_MCP_URL`, set
+  `SANITY_CONTEXT_MCP_TOKEN` to your `SANITY_READ_TOKEN`, and make sure your Studio is deployed
+  (`cd studio && npx sanity deploy`). Same four GROQ tools; `?instructions=` and `?groqFilter=`
+  go on the URL instead of in the app. See `missions/1-1-point-an-agent-at-your-content.md`.
+- **The menu page is empty** → `pnpm bootstrap` hasn't run yet (the CLI's closing message doesn't
+  know about it). Stop the dev server, `pnpm bootstrap`, then `pnpm dev`. Bootstrap is safe to re-run.
 - **The template command fails with "Duplicate origin already exists"** → you pointed it at a
   project that already has a `localhost:3000` CORS origin, usually from an earlier attempt. Let it
   create a new project instead, or delete that origin under Manage → API → CORS origins and re-run.

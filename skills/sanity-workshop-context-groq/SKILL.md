@@ -40,6 +40,10 @@ current.
   most common reason a first connection fails, and it looks like "the app is broken".
 - **GROQ mode needs a deployed schema** (bootstrap ran `sanity schema deploy`). Without it the
   connection is refused with JSON-RPC `-32004`.
+- **Plan B exists.** If the Context app is unavailable for the org, the legacy project-addressed
+  endpoint (`SANITY_CONTEXT_MCP_URL_FALLBACK` in `app/.env.local`) serves the same tools with the
+  project read token as bearer, given a deployed Studio. `instructions` and `groqFilter` go on the
+  URL. Details in [wiring-the-route.md](references/wiring-the-route.md).
 - **GROQ mode serves four tools:** `initial_context`, `schema_explorer`, `groq_query`,
   `array_field_reader`. Exact filters, keyword ranking, and semantic ranking are **all GROQ the
   agent writes inside `groq_query`** — the observable signal is the GROQ text, not a tool name.
