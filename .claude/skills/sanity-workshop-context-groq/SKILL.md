@@ -14,12 +14,12 @@ otherwise do the lesson instead of the learner.
 
 ## What this skill knows
 
-| Mission | You help with                                                                         | The attendee observes                                          |
-| ------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| 1-1     | Wiring `app/app/api/agent/route.ts` to a Context MCP endpoint                         | Real items come back, and they can read the GROQ               |
-| 1-2     | Nothing — you run three questions and report                                          | Three different GROQ shapes; how many calls the third took     |
-| 1-5     | Reading `app/lib/loyalty.ts` server-side and injecting signals into the system prompt | The same question answers differently for a signed-in guest    |
-| 1-6     | Nothing in code — `groqFilter` is set in the Context app                              | The Winter Miso Bowl returns nothing instead of being withheld |
+| Mission | You help with                                                                         | The attendee observes                                               |
+| ------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 1-1     | Wiring `app/app/api/agent/route.ts` to a Context MCP endpoint                         | Real items come back, and they can read the GROQ                    |
+| 1-2     | Nothing in code — the attendee sets `instructions` on the MCP between the two prompts | Three GROQ shapes; question 2 going semantic once instructions land |
+| 1-5     | Reading `app/lib/loyalty.ts` server-side and injecting signals into the system prompt | The same question answers differently for a signed-in guest         |
+| 1-6     | Nothing in code — `groqFilter` is set in the Context app                              | The Winter Miso Bowl returns nothing instead of being withheld      |
 
 Missions 1-3 and 1-4 (the second endpoint, routing) belong to `sanity-workshop-knowledge-bases`.
 
@@ -98,18 +98,28 @@ say so when nothing comes back. The seed's expected answer to _"what vegan bowls
 Austin?"_ is exactly one item, the Harissa Chickpea Bowl; if two come back, the location predicate
 did no work — show the GROQ.
 
-## Mission 1-2 — report, don't change
+## Mission 1-2 — report, don't change; then report again
 
-Run the three questions in the mission prompt one at a time and, for each, show the GROQ and
-name the modality. The reference [retrieval-modalities.md](references/retrieval-modalities.md)
-has the shapes to recognise: `==` and `in` predicates (exact), `match text::query()` (keyword),
-`score(text::semanticSimilarity())` (semantic), and the multi-call traversal `recipe →
-ingredient.allergenTags → crossContactStatement` that the gluten-free question needs. Point at the
-`_embeddings` fragment on the semantic question — it names the words that made the spicy bowl
-sink. If the ranking looks random, check embeddings status before anything else. **The prompt
-ends with "Do not change any code. Just report." Honour it.** If the third answer is wrong or
-wobbly, the fix is the endpoint's `instructions` field, not code — see
-[instructions-field.md](references/instructions-field.md) and the `dial-your-context` skill.
+Two prompts, one mission. **First prompt:** run the three questions one at a time and, for each,
+show the GROQ and name the modality. The reference
+[retrieval-modalities.md](references/retrieval-modalities.md) has the shapes to recognise: `==`
+and `in` predicates (exact), `match text::query()` (keyword), `score(text::semanticSimilarity())`
+(semantic), and the multi-call traversal `recipe → ingredient.allergenTags →
+crossContactStatement` that the gluten-free question needs. **Expect question 2 not to go
+semantic on a bare endpoint** — in every test run the agent found `calories`, filtered
+`calories >= 640`, projected `body`, and judged heat by reading. Say so plainly; there is no
+`_score` or `_embeddings` fragment to show, and that absence is the observation. If the agent
+claims "there is no `_embeddings` field", it projected explicitly — `_embeddings[].fragments` in
+a projection shows it. If the ranking looks random, check embeddings status before anything else.
+**Both prompts end with "Do not change any code. Just report." Honour it.**
+
+**Between the prompts, the attendee pastes the deltas into the MCP's `instructions` field in the
+Context app** (Plan B: `?instructions=` on the URL). That is their step, not yours; the paste
+block is in the mission file and the full list in
+[instructions-field.md](references/instructions-field.md). **Second prompt:** re-run question 2
+in a fresh conversation, show the GROQ, confirm `text::semanticSimilarity()` fired, point at the
+`_embeddings` fragment that made the match, and put the two runs side by side. If the third
+answer wobbles later, it's the same lever; the `dial-your-context` skill is the general method.
 
 ## Mission 1-5 — personalize server-side
 

@@ -2,6 +2,10 @@
 
 **Goal** — Publish a document and watch code run because of it.
 
+_Three tabs again — **localhost:3333** (Studio), **localhost:3000** (the app), **localhost:8080**
+(the Functions emulator) — plus a spare terminal for the log watcher. This track happens in the
+Studio and the terminal; the app is only there to show the menu the pipeline feeds._
+
 **Prompt** — copy this:
 
 ```
@@ -27,6 +31,12 @@ Function reacting to your publish.
 
 The log is this track's tool-call inspector — the equivalent of Track 1's "read the GROQ". Both
 tracks open by making the invisible visible; that's what makes them the same workshop.
+
+**While the watcher waits** — open the two files yourself: `functions/draft-menu-copy/index.ts`
+and `sanity.blueprint.ts`. The handler is twenty lines that log and return. The blueprint's
+`event` block is the three gates your agent just explained — `on`, `filter`, `projection` — and
+the comment above `filter` says why the recursion guard is already there. These two files are
+everything Missions 2-2 and 2-3 change, so knowing their shape now makes the diffs readable later.
 
 **If stuck** — "No such function" means it isn't built: `pnpm --filter @starter/functions build`.
 The directory name must match the blueprint `name`. Nothing in the watcher after a publish? Give it

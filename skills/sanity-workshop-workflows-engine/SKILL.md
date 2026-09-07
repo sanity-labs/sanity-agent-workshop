@@ -67,6 +67,14 @@ Exact code and commands, in the official `defineStage` / `defineActivity` / `def
 Done when a new menu item is held at `review` — Publish disabled, `approved` unreachable — until a
 human fires Approve, and the attendee can read the history to see what happened, in what order.
 
+4. **Compose it.** The mission then has the attendee deploy the Mission 2-3 handler
+   (`pnpm --filter @starter/functions deploy`), create another fresh item with a recipe, and
+   **publish it once while still in `drafting`** — the deployed Function fires on publish and
+   drafts the copy and callout into the draft. Submit then holds the AI draft at review. The
+   definition and the blueprint don't change; do not suggest `includeDrafts` to make the Function
+   fire earlier — it breaks Mission 2-3's recursion story. If the publish drafts nothing, the
+   deployed Function is still the stub.
+
 ## The idea worth the whole mission
 
 People, agents, and applications all follow the same definition and write to the same record. An

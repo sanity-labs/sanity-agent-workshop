@@ -3,11 +3,17 @@
 **Goal** — Wire the stubbed agent route to a Sanity Context MCP over your own dataset, and read
 the GROQ it writes.
 
+_`pnpm dev` is running and you have three tabs open: **localhost:3333** (Studio),
+**localhost:3000** (the app), **localhost:8080** (the Functions emulator — Track 2 uses it; leave
+it running). Track 1 lives in the second one._
+
 **Before the prompt (you, in the Dashboard, ~3 minutes):**
 
 1. Open the **Context** app in the Sanity Dashboard (your organization → Apps → Context).
 2. Create an **MCP**. Source: your project + dataset (`<projectId>.production`). That makes it
-   GROQ mode. **Pick the name carefully — it is part of the URL and cannot be changed.**
+   GROQ mode. **Pick the name carefully — it is part of the URL and cannot be changed.** Leave
+   **Instructions** empty for now — Mission 1-2 fills it in, after you've watched a bare endpoint
+   miss.
 3. Copy the endpoint URL the app shows after you save. It looks like
    `https://api.sanity.io/v1/context/organizations/<orgId>/mcp/<name>`.
 4. Put it in `app/.env.local` as `SANITY_CONTEXT_MCP_URL`. Your `SANITY_ORGANIZATION_ID` and

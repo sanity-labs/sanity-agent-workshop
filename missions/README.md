@@ -12,7 +12,9 @@ is the first half of that sentence. Track 2 is the second. Governance is the hin
 ## How to run a mission
 
 1. Open the mission file. Read **Goal** and **Done when** before anything else.
-2. Copy the **Prompt** block into your coding agent, in this repo, with `pnpm dev` running.
+2. Copy the **Prompt** block into your coding agent, in this repo, with `pnpm dev` running and
+   three tabs open: `localhost:3333` (Studio), `localhost:3000` (the app), `localhost:8080` (the
+   Functions emulator).
    Claude Code loads the `skills/` automatically; other agents can read `AGENTS.md` and the
    relevant `skills/<name>/SKILL.md`.
 3. Watch what the agent shows you. **Done when is always an observation** — a tool call you can
@@ -67,7 +69,8 @@ recipe reveals an undeclared allergen and watch it **not** ship.
 
 **Offramp (2-4)** is a real build with the Workflows engine: define a review workflow in code,
 deploy it, and hold a menu item at _review_ until a human clicks Approve. The plugin is already
-registered; you deploy a definition.
+registered; you deploy a definition. Then deploy the 2-3 handler and run the whole thing end to
+end: the Function drafts, the gate holds, a person approves.
 
 **What lands:** an AI step is only as good as the context you hand it, and some steps need a
 human in front of them. Marketing copy localizes; a safety statement doesn't. This track _does_

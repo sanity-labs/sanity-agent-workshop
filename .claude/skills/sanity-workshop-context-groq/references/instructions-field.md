@@ -3,7 +3,8 @@
 The MCP's `instructions` (set in the Context app, up to 10,000 characters) is injected into the
 agent's tool guidance. It should contain **only what the schema doesn't make obvious**. The
 `dial-your-context` skill is the full interactive method; this page is the Green & Gather
-shortlist, for when Mission 1-2's third question wobbles or a later mission needs guidance.
+shortlist. Mission 1-2's second half pastes the first four bullets of it after watching question 2
+miss on a bare endpoint; the rest is here for when a later question wobbles.
 
 ## Deltas worth stating
 

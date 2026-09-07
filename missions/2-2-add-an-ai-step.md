@@ -28,6 +28,15 @@ schema and do not edit the seed. Do not deploy.
 reflect what's actually in the recipe — including an allergen the declared array never mentioned.
 On the Harissa Chickpea Bowl, the callout names **sesame**; the menu declares nothing.
 
+**Before / after — where to look.** _Before:_ Studio → Menu items → Harissa Chickpea Bowl. Under
+**Description**, **Base copy** is empty; **Allergen callout** is empty; there are no pending
+changes. The run itself happens in the terminal, and the Studio announces nothing. _After:_ reopen
+the same item. It now shows **pending changes** — a draft — with Base copy populated and Allergen
+callout populated, naming **sesame**, ending with the cross-contact statement verbatim. The three
+market fields are still empty; that's 2-3. Nothing is published: this is a draft a person can
+still edit or discard. **The deployed Function is still the 2-1 stub** — a Studio publish drafts
+nothing until you redeploy, which Mission 2-4 does on purpose.
+
 _Say it out loud:_ drafting the callout means **reading the linked recipe**. The step is only as
 good as the context you hand it. That single sentence connects this track to the theme — the same
 lesson as Track 1, arriving from the write side instead of the read side.

@@ -34,6 +34,14 @@ schema. Do not deploy.
 **Done when** — `description.nyc`, `.austin`, and `.chicago` are all populated and differ from
 each other, `allergenCallout` is unchanged — **and the bad item doesn't ship.**
 
+**Before / after — where to look.** _Before_ (`pnpm seed:reset`): every menu item's five copy
+fields — Base copy, NYC, Austin, Chicago, Allergen callout — are empty; no drafts. _After, Herb
+Falafel Wrap:_ a draft with all four description fields populated and different in voice, and one
+callout. _After, Harissa Chickpea Bowl:_ **no copy anywhere**. The terminal shows the structured
+warning naming sesame, and — if the handler flagged the draft — a held-for-review note where the
+callout would be. Nothing published changed in either case. A Studio publish still runs the
+deployed 2-1 stub; the chain runs through `functions test` until 2-4 deploys it.
+
 The failing case is the important half. Without it every mission on this track succeeds, the
 human gate in 2-4 has no justification, and the governance half of the theme never lands.
 **Automation needs a stop condition.**

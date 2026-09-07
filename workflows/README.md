@@ -61,6 +61,11 @@ writes nothing.
 document is born under review. Fire _Submit for food-safety review_ in the Workflows view, notice
 Publish is disabled, fire _Approve_, and read the run's history in the Workflows tool.
 
+**Then compose it.** Deploy the Mission 2-3 handler (`pnpm --filter @starter/functions deploy`),
+create another fresh item with a recipe, and publish it once while it is still in `drafting`. The
+Function fires on that publish and drafts the copy and callout into the draft; Submit holds
+_that_ at review. Nothing in the definition changes — the mission file has the click path.
+
 ## Two things to get right
 
 - **The `tag` must match** between the deploy and `workflowStudioPlugin({tag})`. A definition
