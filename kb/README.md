@@ -50,8 +50,9 @@ cautious claim and flag the disagreement.
 query. A KB binds one dataset with one complete GROQ query, so the policies, ingredients,
 recipes, and menu items all come through this single source. It leaves out `location`
 (availability is live data, GROQ's job), `priceCents` (snapshot risk), and anything with
-`status == "internal"`, so the unlaunched Winter Miso Bowl cannot leak through the KB. Deprecated
-items stay in so the build can reconcile the Summer Peach Bowl against the legacy site.
+`status == "internal"` — the unlaunched Winter Miso Bowl **and its recipe**, which is why the
+seed marks both internal — so the bowl cannot leak through the KB. Deprecated items stay in so
+the build can reconcile the Summer Peach Bowl against the legacy site.
 
 ```groq
 *[
@@ -74,7 +75,7 @@ items stay in so the build can reconcile the Summer Peach Bowl against the legac
 }
 ```
 
-Tested against the seed: **76 documents**. A dataset source needs a Developer or Administrator
+Tested against the seed: **75 documents**. A dataset source needs a Developer or Administrator
 role on the project — you own yours, so you have it.
 
 ### 3. Upload the four files

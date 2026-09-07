@@ -96,7 +96,11 @@ per-ingredient picture. They deliberately disagree on four items:
 6. **Unlaunched item** — `gg.menuItem.winter-miso-bowl`, `status: internal`,
    `availableFrom: 2026-12-01`. It is also flagged **vegan**, so a vegan query that
    forgets to filter on `status` returns 8 items instead of 7 and leaks an unlaunched
-   product. That is the point.
+   product. That is the point. Its recipe, `gg.recipe.winter-miso`, is `internal` too:
+   its body says the dish is held for launch, and the second test run showed a Knowledge
+   Base built from this seed leaking the bowl through the published recipe while the menu
+   item was correctly excluded. A boundary has to cover every document that describes the
+   thing, not just the one named after it.
 
 ## Regenerating
 

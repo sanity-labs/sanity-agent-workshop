@@ -25,6 +25,9 @@ status "internal", available from December, and flagged vegan) via the running a
 route. Try at least three phrasings, for example: "Tell me about the Winter Miso Bowl", "What's
 launching in December?", "List every vegan bowl including ones not on the menu yet." Then ask
 "How many vegan options do you have?" Show me the GROQ and the results for each.
+Finally, if my route has the knowledge base wired from Mission 1-3, ask once more: "Is the
+Winter Miso Bowl safe for a sesame allergy? Check the food safety knowledge base." Show me
+which tool answered and what it said.
 Run this against the app at localhost:3000 — not through your own Sanity tools.
 Report what came back. Do not change any code.
 ```
@@ -36,6 +39,14 @@ agent's own query forgets `status`.
 Before the filter, the agent's query decided what leaked. After, the server does. That's the
 difference between retrieval and governance. Say it out loud, or people leave thinking GROQ is an
 access-control feature: **scope is server-enforced, not prompt-negotiated.**
+
+**Two sources, two boundaries.** `groqFilter` scopes the GROQ endpoint and nothing else. The
+Knowledge Base has its own boundary, set at build time by the dataset query in `kb/README.md`,
+which excludes every `internal` document — the bowl _and its recipe_, whose body says the dish is
+held for launch. So the KB probe should also come back empty-handed. If the KB describes the
+bowl, its source dataset was seeded before the recipe was marked internal, or the build query
+dropped the `status` clause: reimport the seed and rebuild. The second boundary is the one people
+forget, because it lives where the KB was built, not where the question is asked.
 
 **If stuck** — If the bowl still appears, the filter didn't save, or the app is hitting a
 different endpoint than the one you edited. `groqFilter` applies server-side to every query;
