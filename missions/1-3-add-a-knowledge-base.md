@@ -56,7 +56,10 @@ exists only in the Sunfield Foods spec sheet.** GROQ alone answers from the menu
 confidently, and is wrong in the dangerous direction. It did exactly what it was asked; the
 question was never a query.
 
-**If stuck** — A `403` naming the knowledge base means the wrong token went to the KB endpoint
+**If stuck** — An HTTP `405` means `SANITY_CONTEXT_KB_URL` is the Context app's browser address
+for the KB (`context.sanity.io/…/knowledge-bases/kb…`), not the endpoint; use the
+`api.sanity.io/v1/context/organizations/…/mcp/<name>` URL the app shows for the MCP. A `403`
+naming the knowledge base means the wrong token went to the KB endpoint
 (on the shared backup, that's `SANITY_CONTEXT_KB_TOKEN` missing or wrong; on your own, it means
 `SANITY_CONTEXT_KB_TOKEN` is set when it shouldn't be). `-32005` means the endpoint has no
 readable KB — the URL is the GROQ endpoint, or your MCP has the dataset as a source too, so the

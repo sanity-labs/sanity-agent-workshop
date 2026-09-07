@@ -147,7 +147,10 @@ Answering. Never tell a guest an item is safe, allergen-free, or suitable for th
 Not held here. Prices, which locations serve an item, opening hours, counts or lists of items matching a filter, and anything about unreleased items. Those come from live menu data. If asked, say this knowledge base does not cover it rather than inferring from an entry.
 ```
 
-Copy the endpoint URL into `app/.env.local`:
+Copy the **endpoint URL** into `app/.env.local`. It is the one shaped like your GROQ endpoint
+(`api.sanity.io/v1/context/organizations/…/mcp/<name>`), shown after you save. **Not** the
+address in your browser's location bar (`context.sanity.io/<org>/knowledge-bases/kb…`) — that is
+the KB's page in the app, and pointing the agent at it fails with an HTTP `405`.
 
 ```sh
 SANITY_CONTEXT_KB_URL=https://api.sanity.io/v1/context/organizations/<yourOrgId>/mcp/<kbEndpointName>
