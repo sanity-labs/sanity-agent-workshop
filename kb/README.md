@@ -6,9 +6,7 @@ Track 1, Mission 1-3 adds a Sanity Context **Knowledge Base** as a second source
 Mission 1-1 tells you to start it before you go on to 1-2 — by the time you reach 1-3 it is done.
 
 Building your own means one organization and one token for both endpoints, your own ingest
-report, and your own `purpose` and `instructions` to tune. A **shared, pre-built KB** exists as
-a backup (bottom of this page) for anyone whose build fails, is still running when the room
-reaches 1-3, or who is on Plan B because the Context app won't load for their organization.
+report, and your own `purpose` and `instructions` to tune.
 
 This page is the recipe. Everything about the product is in the public docs:
 
@@ -93,8 +91,8 @@ document Sanity never held, and each carries a fact the dataset doesn't:
 ### 4. Build
 
 **Build entries.** Then move on to Mission 1-2 — the build runs on its own. Done when the status
-line reads **Entries up to date**. Your facilitator's run took about ten minutes; if the status
-still says building when you reach 1-3, use the shared KB below and come back to yours later.
+line reads **Entries up to date**. The build takes about ten minutes; if the status still says
+building when you reach 1-3, wait for it to finish before wiring the endpoint.
 
 ### 5. Read the ingest report (2 minutes, worth it)
 
@@ -155,7 +153,7 @@ the KB's page in the app, and pointing the agent at it fails with an HTTP `405`.
 
 ```sh
 SANITY_CONTEXT_KB_URL=https://api.sanity.io/v1/context/organizations/<yourOrgId>/mcp/<kbEndpointName>
-# SANITY_CONTEXT_KB_TOKEN stays empty — same organization, same SANITY_ORGANIZATION_TOKEN
+# Same organization as the GROQ endpoint, so SANITY_ORGANIZATION_TOKEN is the bearer
 ```
 
 **Shortcut, if you'd rather not create a second MCP:** two URL parameters switch your existing
@@ -190,20 +188,3 @@ Now that the KB is yours, so are the levers:
 
 **Never hand-edit entries.** A rebuild overwrites them. Uploaded files never re-sync either: to
 update one, delete the import and upload again.
-
-## Backup: the shared, pre-built KB
-
-The facilitator built the same KB, from the same recipe, in the workshop organization. Its
-KB-mode endpoint URL and a Context Viewer token for **that** organization are published in the
-workshop course. Use it if your build failed, is still running when you reach 1-3, or you're on
-Plan B.
-
-```sh
-# app/.env.local
-SANITY_CONTEXT_KB_URL=<published in the course>
-SANITY_CONTEXT_KB_TOKEN=<published in the course>   # a token for the FACILITATOR's org, not yours
-```
-
-The token is a separate variable precisely because it is for a different organization than your
-dataset. Keep it server-side like every other token. Everything in Missions 1-3 and 1-4 works the
-same against it; the only thing you lose is the ingest report being about _your_ data.

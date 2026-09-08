@@ -1,19 +1,17 @@
 # Adding the Knowledge Base as a second source
 
-Mission 1-3. Two MCP clients, one flat tool list, and (usually) one token.
+Mission 1-3. Two MCP clients, one flat tool list, and one token.
 
 ## Env
 
 ```sh
 # app/.env.local — the KB-mode MCP the attendee created in their own org (kb/README.md step 7)
 SANITY_CONTEXT_KB_URL=https://api.sanity.io/v1/context/organizations/<orgId>/mcp/<kbEndpointName>
-SANITY_CONTEXT_KB_TOKEN=            # empty: same org, so SANITY_ORGANIZATION_TOKEN serves both
 ```
 
-`SANITY_CONTEXT_KB_TOKEN` is only set on the **shared backup KB**, which lives in the
-facilitator's organization and therefore needs a Context Viewer token for that org. The bearer
-for the KB client is `process.env.SANITY_CONTEXT_KB_TOKEN ?? process.env.SANITY_ORGANIZATION_TOKEN`.
-The wrong org's token at the KB endpoint fails with a `403` naming the Knowledge Base.
+The KB lives in the same organization as the dataset, so the bearer for the KB client is
+`process.env.SANITY_ORGANIZATION_TOKEN`, the same as the GROQ client. The wrong org's token at
+the KB endpoint fails with a `403` naming the Knowledge Base.
 
 ## The pattern
 
@@ -30,9 +28,7 @@ const [groqMcp, kbMcp] = await Promise.all([
     transport: {
       type: 'http',
       url: process.env.SANITY_CONTEXT_KB_URL!,
-      headers: {
-        Authorization: `Bearer ${process.env.SANITY_CONTEXT_KB_TOKEN ?? process.env.SANITY_ORGANIZATION_TOKEN}`,
-      },
+      headers: {Authorization: `Bearer ${process.env.SANITY_ORGANIZATION_TOKEN}`},
     },
   }),
 ])
@@ -83,4 +79,4 @@ exhaustive list; poor fit. These belong in the routing table (Mission 1-4).
 - Knowledge Bases: https://www.sanity.io/docs/ai/sanity-context-knowledge-bases
 - Context MCP tools (KB mode): https://www.sanity.io/docs/ai/sanity-context-mcp-tools
 - Retrieval modes: https://www.sanity.io/docs/ai/sanity-context-retrieval-modes
-- The KB recipe (and the shared backup): `kb/README.md` in this repo
+- The KB recipe: `kb/README.md` in this repo

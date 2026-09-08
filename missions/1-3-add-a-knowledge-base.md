@@ -12,12 +12,10 @@ build at the end of Mission 1-1. Now finish it — steps **5–7** of [`kb/READM
 2. Add the three **instructions** from the recipe and rebuild.
 3. Create a **second MCP** whose only source is the KB, paste its Instructions text, and copy its
    URL into `app/.env.local` as `SANITY_CONTEXT_KB_URL`. Same organization, so it uses your
-   `SANITY_ORGANIZATION_TOKEN` — leave `SANITY_CONTEXT_KB_TOKEN` empty.
+   `SANITY_ORGANIZATION_TOKEN`.
 
-> **Build not done, failed, or you're on Plan B?** Use the shared, pre-built KB: its endpoint URL
-> and a token are published in the workshop course. Put both in `app/.env.local` as
-> `SANITY_CONTEXT_KB_URL` and `SANITY_CONTEXT_KB_TOKEN`. That token is for the facilitator's
-> organization, which is why it's a separate variable. Everything below works the same.
+> **Build still running?** Wait for the status line to read **Entries up to date** before going on.
+> The build usually takes about ten minutes.
 
 **Prompt** — copy this:
 
@@ -27,9 +25,7 @@ the sanity-workshop-knowledge-bases skill.
 
 I have added SANITY_CONTEXT_KB_URL to app/.env.local. That endpoint is a Sanity Context MCP in
 Knowledge Base mode, pointed at the "Green & Gather — Allergens & Food Safety" knowledge base I
-built in my own organization. Use SANITY_CONTEXT_KB_TOKEN as its bearer if it is set (that means
-I'm on the shared backup KB, which lives in a different organization), otherwise my
-SANITY_ORGANIZATION_TOKEN.
+built in my own organization, so it takes my SANITY_ORGANIZATION_TOKEN as its bearer.
 
 In app/app/api/agent/route.ts, add it as a second MCP source alongside the existing GROQ-mode
 one, so the agent holds both tool sets. Watch for the initial_context name collision. Do not
@@ -59,9 +55,8 @@ question was never a query.
 **If stuck** — An HTTP `405` means `SANITY_CONTEXT_KB_URL` is the Context app's browser address
 for the KB (`context.sanity.io/…/knowledge-bases/kb…`), not the endpoint; use the
 `api.sanity.io/v1/context/organizations/…/mcp/<name>` URL the app shows for the MCP. A `403`
-naming the knowledge base means the wrong token went to the KB endpoint
-(on the shared backup, that's `SANITY_CONTEXT_KB_TOKEN` missing or wrong; on your own, it means
-`SANITY_CONTEXT_KB_TOKEN` is set when it shouldn't be). `-32005` means the endpoint has no
+naming the knowledge base means the wrong token went to the KB endpoint; it takes the same
+`SANITY_ORGANIZATION_TOKEN` as the GROQ endpoint. `-32005` means the endpoint has no
 readable KB — the URL is the GROQ endpoint, or your MCP has the dataset as a source too, so the
 dataset won and the KB is ignored. If the peanut answer cites nothing or says "peanut-free", open
 your KB's entry for the Thai Crunch Bowl: if the Sunfield sheet isn't cited, that upload didn't

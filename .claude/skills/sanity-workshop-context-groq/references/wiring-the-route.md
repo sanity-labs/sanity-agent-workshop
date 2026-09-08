@@ -7,13 +7,12 @@ attendee is meant to watch their route take shape.
 ## The pieces
 
 **1. Connect to the endpoint.** Token and URL stay server-side; the browser only ever talks to
-this route. The bearer is the org token for a Context-app endpoint, or the project read token for
-the Plan B legacy endpoint — `SANITY_CONTEXT_MCP_TOKEN` lets the env decide.
+this route. The bearer is the organization token.
 
 ```ts
 import {createMCPClient} from '@ai-sdk/mcp'
 
-const token = process.env.SANITY_CONTEXT_MCP_TOKEN || process.env.SANITY_ORGANIZATION_TOKEN
+const token = process.env.SANITY_ORGANIZATION_TOKEN
 
 const mcp = await createMCPClient({
   transport: {
@@ -67,25 +66,6 @@ return result.toUIMessageStreamResponse()
 `@ai-sdk/anthropic` reads `ANTHROPIC_API_KEY` from env with no extra code. `stopWhen` matters:
 the gluten-free question in Mission 1-2 takes several `groq_query` calls, and the default of one
 step would cut it off.
-
-## Plan B — the legacy project-addressed endpoint
-
-If the Context app is unavailable for the attendee's organization, the pre-v2 endpoint still
-serves the identical GROQ tools (`initial_context`, `groq_query`, `schema_explorer`,
-`array_field_reader`) and `/initial-context`:
-
-```
-https://api.sanity.io/v2026-03-03/context/mcp/<projectId>/<dataset>
-```
-
-Differences that matter: the bearer is a **project** token (`SANITY_READ_TOKEN`, Viewer), the
-project needs a **deployed Studio** (schema alone returns `-32004`), and `instructions` /
-`groqFilter` are set as **URL query parameters** rather than in the app. Bootstrap writes the URL
-to `SANITY_CONTEXT_MCP_URL_FALLBACK`. Verified 2026-09-06 on a fresh project: tools/list,
-initial-context, `?groqFilter=` narrowing (vegan count 8 → 7), and `?instructions=` injection all
-work; `text::semanticSimilarity()` works whenever Dataset Embeddings are enabled, which bootstrap
-does. It is deprecated, so the Context app is the path to teach; this is the path that keeps the
-room moving.
 
 ## Workshop-specific details
 

@@ -50,8 +50,6 @@ it should hold only what the schema doesn't make obvious.
 
 1. In the Context app, open your MCP (Dashboard → Apps → Context → your MCP) and paste the block
    below into **Instructions**. Save.
-   _On Plan B?_ The legacy endpoint has no app UI. Append `?instructions=<url-encoded text>` to
-   `SANITY_CONTEXT_MCP_URL` in `app/.env.local` and restart `pnpm dev`.
 2. Re-ask question 2 with this prompt:
 
 ```

@@ -11,7 +11,7 @@
  *   2b. Prompt for organization ID + organization token (skippable, loud)
  *   3. Add CORS origin http://localhost:3000
  *   4. Deploy schema (required for a Context MCP in GROQ mode)
- *   4b. Deploy Studio — prompted (default yes), soft-fail. Needed by the Plan B endpoint.
+ *   4b. Deploy Studio — soft-fail. A hosted Studio for helpers and phones; nothing else depends on it.
  *   5. Import the 83-document seed
  *   6. Make the dataset private
  *   7. Create a project read token (Viewer) → app/.env.local
@@ -154,14 +154,7 @@ try {
   ensureAppEnvLocal()
   patchEnvVar(appEnvLocal, 'NEXT_PUBLIC_SANITY_PROJECT_ID', projectId)
   patchEnvVar(appEnvLocal, 'NEXT_PUBLIC_SANITY_DATASET', dataset)
-  // Plan B for Mission 1-1: the legacy project-addressed Context endpoint. Needs a
-  // deployed Studio and takes the project read token as bearer. See app/.env.example.
-  patchEnvVar(
-    appEnvLocal,
-    'SANITY_CONTEXT_MCP_URL_FALLBACK',
-    `https://api.sanity.io/v2026-03-03/context/mcp/${projectId}/${dataset}`,
-  )
-  console.log('Wrote project ID, dataset, and the fallback Context URL to app/.env.local')
+  console.log('Wrote project ID and dataset to app/.env.local')
   success('Consolidate env')
 } catch (err) {
   failed('Consolidate env', err, `Add NEXT_PUBLIC_SANITY_PROJECT_ID=${projectId} to app/.env.local`)
@@ -303,35 +296,20 @@ try {
   failed('Deploy schema', err, 'cd studio && npx sanity schema deploy')
 }
 
-// ── 4b. Deploy Studio (optional) ──────────────────────────────────────────
-// Not load-bearing: the Context app does not need a hosted Studio. Useful on
-// its own — content on a phone, a helper looking at your data without a
-// screen-share. `sanity deploy` asks you to pick a hostname the first time,
-// so it is opt-in here rather than silently blocking on a prompt.
+// ── 4b. Deploy Studio ─────────────────────────────────────────────────────
+// A hosted Studio: content on a phone, a helper looking at your data without a
+// screen-share. `sanity deploy` asks you to pick a hostname the first time.
+// Soft-fail: a Studio deploy must never stop bootstrap.
 
 heading('Deploy Studio')
-console.log(
-  'A hosted Studio is optional for the workshop, with one exception: the fallback Context\n' +
-    'endpoint (Plan B in app/.env.example, for when the Context app is unavailable) only\n' +
-    'works for a project with a deployed Studio. Takes about a minute; you pick a hostname.',
-)
+console.log('Deploying a hosted Studio. Takes about a minute; you pick a hostname.')
 try {
-  const answer = prompt('Deploy a hosted Studio now? (Y/n): ')
-  if (!/^n/i.test(answer.trim())) {
-    sanity('deploy')
-    success('Deploy Studio')
-  } else {
-    skipped(
-      'Deploy Studio',
-      'Not requested. Nothing depends on it.',
-      'cd studio && npx sanity deploy',
-    )
-  }
+  sanity('deploy')
+  success('Deploy Studio')
 } catch (err) {
-  // Never let a Studio deploy stop bootstrap.
   skipped(
     'Deploy Studio',
-    `Deploy did not finish (${err instanceof Error ? err.message : String(err)}). Nothing depends on it.`,
+    `Deploy did not finish (${err instanceof Error ? err.message : String(err)}). Nothing else depends on it.`,
     'cd studio && npx sanity deploy',
   )
 }

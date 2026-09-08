@@ -1,7 +1,7 @@
 # What the Knowledge Base knows
 
-**Green & Gather — Allergens & Food Safety**, built by the attendee from `kb/README.md` (the
-shared backup is built from the same recipe): one dataset source plus four uploaded files. Three
+**Green & Gather — Allergens & Food Safety**, built by the attendee from `kb/README.md`: one
+dataset source plus four uploaded files. Three
 of the files have no GROQ expression at all; that is why the KB exists rather than being tidier.
 
 | #   | Source                                                                          | In the dataset? | Load-bearing content                                                                                                                                                                                   |
@@ -34,7 +34,7 @@ current substitution policy does **not** promise a gluten-free wrap swap because
 surfaces, notes the older operations manual said otherwise and is superseded, and cites the
 Northfield sheet on the tortilla. If the agent says the swap is available on request, it read the
 manual over the policy — that is a KB `instructions` issue, not code: accept the current-policy
-claim on the gluten-free issue in the KB and rebuild (on the shared backup, tell a helper).
+claim on the gluten-free issue in the KB and rebuild.
 
 ## The side payoff
 

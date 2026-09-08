@@ -148,18 +148,11 @@ Per workspace, no cascading. Every `.env.example` documents its own file.
 | `SANITY_ORGANIZATION_ID`, `SANITY_ORGANIZATION_TOKEN`         | `app/.env.local` | bootstrap (prompt) — you create them in Manage   |
 | `SANITY_CONTEXT_MCP_URL`                                      | `app/.env.local` | **you, Mission 1-1**                             |
 | `SANITY_CONTEXT_KB_URL`                                       | `app/.env.local` | **you, Mission 1-3** (built from `kb/README.md`) |
-| `SANITY_CONTEXT_KB_TOKEN`                                     | `app/.env.local` | only if you fall back to the shared KB           |
 
 ## If something is wrong
 
 - **The agent can't see any content** → check your org token before your code. A missing or
   project-scoped token reads as a broken connection, not a missing credential.
-- **The Context app won't load or errors for your organization** → use **Plan B**: the legacy
-  project-addressed endpoint. Bootstrap wrote its URL to `app/.env.local` as
-  `SANITY_CONTEXT_MCP_URL_FALLBACK`. Copy that value into `SANITY_CONTEXT_MCP_URL`, set
-  `SANITY_CONTEXT_MCP_TOKEN` to your `SANITY_READ_TOKEN`, and make sure your Studio is deployed
-  (`cd studio && npx sanity deploy`). Same four GROQ tools; `?instructions=` and `?groqFilter=`
-  go on the URL instead of in the app. See `missions/1-1-point-an-agent-at-your-content.md`.
 - **The menu page is empty** → `pnpm bootstrap` hasn't run yet (the CLI's closing message doesn't
   know about it). Stop the dev server, `pnpm bootstrap`, then `pnpm dev`. Bootstrap is safe to re-run.
 - **The template command fails with "Duplicate origin already exists"** → you pointed it at a
