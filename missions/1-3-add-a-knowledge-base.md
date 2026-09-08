@@ -6,9 +6,11 @@ watch the hard question from 1-2 become one cited lookup.
 **Before the prompt (you, in the Context app, ~5 minutes):** you started your Knowledge Base
 build at the end of Mission 1-1. Now finish it — steps **5–7** of [`kb/README.md`](../kb/README.md):
 
-1. Check the status line reads **Entries up to date**. Open **Issues** and read the ingest report:
-   four expected conflicts, each one your own data disagreeing with a file. Accept the
-   current-policy claim on each.
+1. Check the status line reads **Entries up to date**. Open **Issues** and read the ingest report.
+   Every build reconciles a little differently, so your list is your own; resolve each issue
+   toward the source that should win (current policy over older document, dated supplier spec
+   over menu field, recipe over hand-written matrix). Look for the Thai Crunch entry citing the
+   Sunfield spec, and for how the gluten-free wrap substitution was handled.
 2. Add the three **instructions** from the recipe and rebuild.
 3. Create a **second MCP** whose only source is the KB, paste its Instructions text, and copy its
    URL into `app/.env.local` as `SANITY_CONTEXT_KB_URL`. Same organization, so it uses your

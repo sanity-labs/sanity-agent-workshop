@@ -38,10 +38,14 @@ claim on the gluten-free issue in the KB and rebuild.
 
 ## The side payoff
 
-The KB's **Issues** page flags that the attendee's own FAQ is wrong and the legacy site is serving
-a claim the current policy would never make. Four expected issues: Thai Crunch peanut status, the
-gluten-free wrap swap, assurance language, Summer Peach availability. If one is missing, the source
-carrying it didn't ingest. Nobody built an agent to learn that — it is a content audit for free.
+The KB's **Issues** page flags the attendee's own content disagreeing with itself: their FAQ is
+wrong, their legacy site serves a claim the current policy would never make, a menu item declares
+an allergen its recipe never carries. **Every build surfaces a different list**, so never tell an
+attendee how many issues to expect. The seed is built to produce four planted conflicts (Thai
+Crunch peanut status, the gluten-free wrap swap, assurance language, Summer Peach availability),
+and a build may surface some, all, or others alongside them. If the Thai Crunch entry does not cite
+the Sunfield spec, that upload didn't ingest. Nobody built an agent to learn that — it is a content
+audit for free.
 
 ## Debug levers (theirs now)
 

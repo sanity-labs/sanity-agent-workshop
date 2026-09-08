@@ -96,20 +96,27 @@ building when you reach 1-3, wait for it to finish before wiring the endpoint.
 
 ### 5. Read the ingest report (2 minutes, worth it)
 
-Open **Issues**. The build should have flagged four conflicts. If one is missing, the source that
-carries it didn't land:
+Open **Issues**. Every build reads the same sources and reconciles them a little differently, so
+your list will not match anyone else's: a spelling difference between a description and its
+source, an allergen matrix in one entry disagreeing with the ingredient list in another, a menu
+item declaring an allergen its recipe never carries. All of it is your content disagreeing with
+itself, found before an agent asked a single question.
 
-| Expected issue                                                  | Sources in conflict                                                       |
+Resolve each issue toward the source that should win: the current policy over an older document,
+a dated supplier specification over a menu field, a recipe's ingredients over a hand-written
+matrix. **Accepting a claim writes the corresponding instruction itself**, anchored to the right
+source. Two things to look for while you are there, because Mission 1-3 relies on them: the Thai
+Crunch Bowl entry citing the Sunfield Foods specification, and how the build handled the
+gluten-free wrap substitution (ops manual, March 2025, against `substitutionPolicy`, 1 Feb 2026).
+
+The seed is built to produce these conflicts, and a given build may surface some, all, or others:
+
+| Planted conflict                                                | Sources in conflict                                                       |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | Thai Crunch Bowl peanut status                                  | menu data + `gg.faq.thai-crunch-peanut` + legacy matrix vs. Sunfield spec |
 | Gluten-free wrap substitution                                   | ops manual (March 2025) vs. `substitutionPolicy` (1 Feb 2026)             |
 | Assurance language ("keep your meal safe", "accommodate most…") | legacy site vs. the current policy's refusal to guarantee                 |
 | Summer Peach Bowl availability                                  | legacy site "Now Serving" vs. `availableUntil` and `status: deprecated`   |
-
-Your own FAQ is wrong and your legacy site is serving a claim the current policy would never
-make. Nobody built an agent to learn that — it's a content audit for free. **Accept the
-current-policy claim on each**; the KB writes the corresponding instruction itself, anchored to
-the right source.
 
 ### 6. Add three instructions
 
