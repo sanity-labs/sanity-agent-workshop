@@ -15,6 +15,7 @@
     "@sanity/client": "catalog:",
     "@sanity/functions": "^1.7.1",
     "@starter/tsconfig": "workspace:*",
+    "@types/node": "^22.19.13",
     "groq": "catalog:",
     "rolldown": "^1.2.7",
     "sanity": "catalog:"

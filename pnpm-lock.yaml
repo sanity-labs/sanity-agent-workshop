@@ -183,6 +183,9 @@ importers:
       '@starter/tsconfig':
         specifier: workspace:*
         version: link:../packages/@starter/tsconfig
+      '@types/node':
+        specifier: ^22.19.13
+        version: 22.20.1
       groq:
         specifier: 'catalog:'
         version: 6.12.0
