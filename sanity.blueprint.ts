@@ -1,9 +1,9 @@
-import {defineBlueprint, defineDocumentFunction} from '@sanity/blueprints'
-
+import { defineBlueprint, defineDocumentFunction } from '@sanity/blueprints'
+/*
 // Load env — jiti (which loads this file) doesn't support process.loadEnvFile,
 // so we parse studio/.env manually. import.meta.dirname is synthesized by jiti.
-import {readFileSync} from 'node:fs'
-import {resolve} from 'node:path'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 try {
   const envFile = resolve(import.meta.dirname ?? process.cwd(), 'studio/.env')
@@ -14,15 +14,16 @@ try {
       process.env[match[1].trim()] ??= value
     }
   }
-} catch {}
+} catch { }
 
-const {SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET} = process.env
+const { SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET } = process.env
 
 if (!SANITY_STUDIO_PROJECT_ID || !SANITY_STUDIO_DATASET) {
   throw new Error(
     'Missing required env vars for blueprint deploy: SANITY_STUDIO_PROJECT_ID and SANITY_STUDIO_DATASET must be set in studio/.env',
   )
 }
+*/
 
 /**
  * Track 2's plumbing. One Function, deployed by bootstrap, stubbed in
@@ -32,7 +33,6 @@ export default defineBlueprint({
   resources: [
     defineDocumentFunction({
       name: 'draft-menu-copy',
-      src: 'functions/dist/draft-menu-copy',
       event: {
         on: ['create', 'update'],
         // Recursion guard, in place from day one: Mission 2-2 writes

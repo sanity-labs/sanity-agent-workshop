@@ -18,6 +18,9 @@ catalogs:
     '@sanity/client':
       specifier: ^8.4.0
       version: 8.5.0
+    '@sanity/functions':
+      specifier: ^1.7.1
+      version: 1.7.2
     '@sanity/icons':
       specifier: ^5.2.1
       version: 5.2.1
@@ -95,6 +98,9 @@ importers:
       '@sanity/client':
         specifier: 'catalog:'
         version: 8.5.0
+      '@sanity/functions':
+        specifier: 'catalog:'
+        version: 1.7.2(@aws-lite/client@0.23.7)(@aws-lite/dynamodb@0.3.9)(@aws-lite/lambda@0.1.5)(@aws-lite/sns@0.0.8)(@aws-lite/sqs@0.2.4)
       '@sanity/template-validator':
         specifier: ^3.1.1
         version: 3.1.1
@@ -110,6 +116,9 @@ importers:
       eslint:
         specifier: ^10.10.0
         version: 10.10.0(jiti@2.7.0)
+      groq:
+        specifier: 'catalog:'
+        version: 6.12.0
       oxfmt:
         specifier: ^0.66.0
         version: 0.66.0
@@ -171,30 +180,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-
-  functions:
-    devDependencies:
-      '@sanity/client':
-        specifier: 'catalog:'
-        version: 8.5.0
-      '@sanity/functions':
-        specifier: ^1.7.1
-        version: 1.7.1(@aws-lite/client@0.23.7)(@aws-lite/dynamodb@0.3.9)(@aws-lite/lambda@0.1.5)(@aws-lite/sns@0.0.8)(@aws-lite/sqs@0.2.4)
-      '@starter/tsconfig':
-        specifier: workspace:*
-        version: link:../packages/@starter/tsconfig
-      '@types/node':
-        specifier: ^22.19.13
-        version: 22.20.1
-      groq:
-        specifier: 'catalog:'
-        version: 6.12.0
-      rolldown:
-        specifier: ^1.2.7
-        version: 1.2.7
-      sanity:
-        specifier: 'catalog:'
-        version: 6.9.2(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.7)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)))(@sanity/sdk@3.1.0(@types/react@19.2.18)(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(xstate@5.32.6))(@types/node@22.20.1)(@types/react@19.2.18)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.66.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rolldown@1.2.7)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(typescript@5.9.3)
 
   packages/@starter/eslint-config:
     dependencies:
@@ -2533,8 +2518,8 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
 
-  '@sanity/functions@1.7.1':
-    resolution: {integrity: sha512-mp1q8X7flwQnYdRBnKJLhAV070vSDKCXLxgjIdN8NUOEslDa2oIzFicYcqC4QOwcvdehX5Nbzyda+2N+lZbOjA==}
+  '@sanity/functions@1.7.2':
+    resolution: {integrity: sha512-5Lkt8bYblWMdofDRKBDwr+uEVFgKCJlxOL2qwSuKnD22KVs99Zi8brXNLcNLDcFVsD3tjhMnjHOAcl75+fY2xA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@aws-lite/client': ^0.23.6
@@ -8575,7 +8560,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@sanity/functions@1.7.1(@aws-lite/client@0.23.7)(@aws-lite/dynamodb@0.3.9)(@aws-lite/lambda@0.1.5)(@aws-lite/sns@0.0.8)(@aws-lite/sqs@0.2.4)':
+  '@sanity/functions@1.7.2(@aws-lite/client@0.23.7)(@aws-lite/dynamodb@0.3.9)(@aws-lite/lambda@0.1.5)(@aws-lite/sns@0.0.8)(@aws-lite/sqs@0.2.4)':
     dependencies:
       '@aws-lite/client': 0.23.7
       '@aws-lite/dynamodb': 0.3.9

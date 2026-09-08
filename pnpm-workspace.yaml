@@ -23,6 +23,7 @@ catalog:
   sanity: '~6.9.0'
   '@sanity/vision': '~6.9.0'
   '@sanity/client': '^8.4.0'
+  '@sanity/functions': '^1.7.1'
   '@sanity/icons': '^5.2.1'
   # Studio 6.9 and the workflow packages both want @sanity/ui 3.x. Without an
   # explicit pin pnpm floats it to a 5.0 alpha.

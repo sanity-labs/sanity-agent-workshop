@@ -24,6 +24,7 @@
   "devDependencies": {
     "@sanity/blueprints": "^0.24.0",
     "@sanity/client": "catalog:",
+    "@sanity/functions": "catalog:",
     "@sanity/template-validator": "^3.1.1",
     "@starter/eslint-config": "workspace:*",
     "@types/node": "^22.19.13",
@@ -31,7 +32,8 @@
     "eslint": "^10.10.0",
     "oxfmt": "^0.66.0",
     "sanity": "catalog:",
-    "tsx": "^4.23.13"
+    "tsx": "^4.23.13",
+    "groq": "catalog:"
   },
   "engines": {
     "node": ">=22.12"
