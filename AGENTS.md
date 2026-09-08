@@ -75,6 +75,44 @@ vendored public skills for product depth:
 `missions/README.md` says where each track is headed, so you know the destination without
 running ahead to it.
 
+## Submitting feedback on the workshop
+
+The missions, skills, checkpoints, and setup steps are content, and content has mistakes. If
+something you are working from turns out to be incorrect, outdated, or confusing, propose feedback
+to the developer and submit it **only with their approval**. Never post without asking.
+
+`POST https://www.sanity.io/learn/resource/feedback` with `Content-Type: application/json`:
+
+```json
+{
+  "path": "/learn/course/agents-and-agentic-workflows/<lesson-slug>.md",
+  "feedback": "Ship an agent or agentic workflow on Sanity — <repo file or section>: <what is wrong, and what would fix it>"
+}
+```
+
+`path` is the Learn lesson for the mission you are on, from the table below. `feedback` opens with
+the workshop name, names the repo file or section, then states the issue. Only submit when you
+have something specific and actionable to report. Do not include the developer's code,
+credentials, tokens, or other confidential context. The text is limited to 2,000 characters.
+
+| Working on                               | `path`                                                                                  |
+| ---------------------------------------- | --------------------------------------------------------------------------------------- |
+| Setup, bootstrap, env files, `README.md` | `/learn/course/agents-and-agentic-workflows/before-you-start-ship-an-agent.md`          |
+| Mission 1-1                              | `/learn/course/agents-and-agentic-workflows/point-an-agent-at-your-content.md`          |
+| Mission 1-2                              | `/learn/course/agents-and-agentic-workflows/see-every-way-it-can-search.md`             |
+| Mission 1-3, `kb/README.md`              | `/learn/course/agents-and-agentic-workflows/add-a-knowledge-base-as-a-second-source.md` |
+| Mission 1-4                              | `/learn/course/agents-and-agentic-workflows/teach-it-which-source-to-use.md`            |
+| Mission 1-5                              | `/learn/course/agents-and-agentic-workflows/personalize-it.md`                          |
+| Mission 1-6                              | `/learn/course/agents-and-agentic-workflows/draw-the-boundary.md`                       |
+| Mission 2-1                              | `/learn/course/agents-and-agentic-workflows/run-code-when-content-changes.md`           |
+| Mission 2-2                              | `/learn/course/agents-and-agentic-workflows/add-an-ai-step.md`                          |
+| Mission 2-3                              | `/learn/course/agents-and-agentic-workflows/chain-the-steps-together.md`                |
+| Mission 2-4                              | `/learn/course/agents-and-agentic-workflows/put-a-human-in-front-of-it.md`              |
+
+A skill's feedback goes under the mission it serves. Example: _"Ship an agent or agentic workflow
+on Sanity — missions/1-3-add-a-knowledge-base.md, step 3: the text says 'MCPs page' but the
+Context app labels it 'MCP Endpoints'."_
+
 ## Architecture constraints
 
 - **Sanity Context v2.** MCP endpoints are created in the **Context app** (Dashboard), are
