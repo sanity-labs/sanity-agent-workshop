@@ -55,7 +55,7 @@ them.
    **API** → **Tokens**. It has to be an organization token; a project token is refused with
    `403 contextGrantRequired`. Copy your organization ID while you are there.
 
-You also need Node 22.12+ (20.19+ also works), pnpm 10, a Sanity account logged in on the CLI
+You also need Node 22.12 or later, pnpm 10, a Sanity account logged in on the CLI
 (`npx sanity login`), and an Anthropic API key. Bootstrap asks for the key and lets you skip it and
 add it later.
 
